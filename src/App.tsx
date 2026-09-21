@@ -281,7 +281,7 @@ function MainAppContent() {
       )}
 
       {/* Main Container */}
-      <main className={`flex-1 ${!isAdminRoute ? 'pt-[64px]' : ''} ${!isEmployerRoute && !isAdminRoute ? 'pl-16 md:pl-[72px]' : ''}`}>
+      <main className={`flex-1 ${!isAdminRoute ? 'pt-[64px]' : ''} ${!isEmployerRoute && !isAdminRoute ? 'pl-12 sm:pl-14 md:pl-16 lg:pl-[72px]' : ''}`}>
         <Routes>
           {/* GOVERNMENT JOBS PUBLIC ROUTES */}
           <Route path="/government-jobs" element={<GovJobsPublicListPage />} />
@@ -378,7 +378,7 @@ function MainAppContent() {
 
       {/* Footer (Rendered for candidate experience) */}
       {!isEmployerRoute && !isAdminRoute && (
-        <div className="pl-16 md:pl-[72px]">
+        <div className="pl-12 sm:pl-14 md:pl-16 lg:pl-[72px]">
           <Footer
             onSubscribeNewsletter={handleSubscribeNewsletter}
             onLinkClick={handleNavClick}
