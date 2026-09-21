@@ -167,28 +167,28 @@ export const JobsPage: React.FC<JobsPageProps> = ({
           <div className="w-full lg:w-[60%] flex-1 min-w-0 space-y-4">
             
             {/* Top Bar: Count & Sorting */}
-            <div className="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-xs flex flex-wrap items-center justify-between gap-3">
-              <div className="flex items-center gap-3">
+            <div className="bg-white rounded-lg sm:rounded-2xl p-1.5 sm:p-4 border border-slate-200/80 shadow-xs flex items-center justify-between gap-2 sm:gap-3">
+              <div className="flex items-center gap-2 sm:gap-3">
                 <button
                   onClick={() => setMobileFilterOpen(true)}
-                  className="lg:hidden p-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-semibold text-xs flex items-center gap-1.5"
+                  className="lg:hidden px-2.5 py-1 sm:px-3 sm:py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg sm:rounded-xl font-semibold text-[11px] sm:text-xs flex items-center gap-1 sm:gap-1.5 transition-colors cursor-pointer"
                 >
-                  <SlidersHorizontal className="w-4 h-4" /> Filters
+                  <SlidersHorizontal className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Filters
                 </button>
-                <div>
-                  <h2 className="font-bold text-slate-900 text-sm sm:text-base">
+                <div className="hidden sm:block">
+                  <h2 className="hidden sm:block font-bold text-slate-900 text-sm sm:text-base">
                     Showing {filteredJobs.length} Job Vacancies
                   </h2>
-                  <p className="text-xs text-slate-500">Updated every 15 minutes with direct recruiter links</p>
+                  <p className="hidden sm:block text-xs text-slate-500">Updated every 15 minutes with direct recruiter links</p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 text-xs">
+              <div className="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs">
                 <span className="text-slate-500 font-medium">Sort by:</span>
                 <select
                   value={sortBy}
                   onChange={(e: any) => setSortBy(e.target.value)}
-                  className="bg-slate-50 border border-slate-200 text-slate-900 font-semibold rounded-xl px-3 py-1.5 focus:outline-none cursor-pointer"
+                  className="bg-slate-50 border border-slate-200 text-slate-900 font-semibold rounded-lg sm:rounded-xl px-2 py-1 sm:px-3 sm:py-1.5 focus:outline-none cursor-pointer text-[10.5px] sm:text-xs"
                 >
                   <option value="newest">Newest First</option>
                   <option value="relevance">Most Relevant</option>
@@ -200,7 +200,7 @@ export const JobsPage: React.FC<JobsPageProps> = ({
 
             {/* Active Filters Pill Bar */}
             {(searchQuery || searchLocation || filters.workModes.length > 0 || filters.departments.length > 0) && (
-              <div className="flex items-center gap-2 flex-wrap bg-blue-50/60 p-3 rounded-2xl border border-blue-100 text-xs">
+              <div className="flex items-center gap-2 flex-wrap bg-blue-50/60 p-2.5 sm:p-3 rounded-xl sm:rounded-2xl border border-blue-100 text-xs">
                 <span className="font-semibold text-blue-900">Active Filters:</span>
                 {searchQuery && (
                   <span className="bg-white text-blue-700 px-2.5 py-1 rounded-lg border border-blue-200 font-medium">
@@ -219,24 +219,25 @@ export const JobsPage: React.FC<JobsPageProps> = ({
                 ))}
                 <button
                   onClick={resetFilters}
-                  className="text-blue-600 underline font-semibold ml-auto text-xs"
+                  className="text-blue-600 underline font-semibold ml-auto text-xs cursor-pointer"
                 >
                   Clear All
                 </button>
               </div>
             )}
 
-            {/* Job Cards */}
+            {/* Job Cards - Mobile Masonry Grid / Desktop Feed */}
             {paginatedJobs.length > 0 ? (
-              <div className="space-y-2.5 sm:space-y-3">
+              <div className="columns-1 sm:columns-2 lg:columns-1 gap-2.5 sm:gap-3 space-y-2.5 sm:space-y-0">
                 {paginatedJobs.map((job) => (
-                  <JobCard
-                    key={job.id}
-                    job={job}
-                    onApply={onApplyJob}
-                    isSaved={bookmarkedJobIds.includes(job.id)}
-                    onToggleSave={onBookmarkJob}
-                  />
+                  <div key={job.id} className="break-inside-avoid mb-2.5 sm:mb-3">
+                    <JobCard
+                      job={job}
+                      onApply={onApplyJob}
+                      isSaved={bookmarkedJobIds.includes(job.id)}
+                      onToggleSave={onBookmarkJob}
+                    />
+                  </div>
                 ))}
               </div>
             ) : (
