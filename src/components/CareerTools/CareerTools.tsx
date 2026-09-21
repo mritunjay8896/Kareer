@@ -47,10 +47,10 @@ export const CareerTools: React.FC<CareerToolsProps> = ({ onSelectTool }) => {
           <motion.div
             whileHover={{ y: -4 }}
             onClick={() => onSelectTool('ATS Resume Builder')}
-            className="md:col-span-2 bg-[#eff5ff] text-slate-900 rounded-3xl border border-blue-200/60 shadow-md hover:shadow-xl transition-all flex flex-row relative overflow-hidden group cursor-pointer"
+            className="md:col-span-2 bg-[#eff5ff] text-slate-900 rounded-3xl border border-blue-200/60 shadow-md hover:shadow-xl transition-all flex flex-row relative overflow-hidden group cursor-pointer isolate"
           >
             {/* Background Light Glow */}
-            <div className="absolute top-0 left-0 w-64 h-64 bg-blue-100/40 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute top-0 left-0 w-64 h-64 bg-blue-100/30 rounded-full pointer-events-none" />
 
             {/* Left Content Column */}
             <div className="p-4 sm:p-8 flex-1 flex flex-col justify-between z-10 min-w-0">
@@ -116,7 +116,7 @@ export const CareerTools: React.FC<CareerToolsProps> = ({ onSelectTool }) => {
               </div>
 
               {/* Score Badge Graphic - Centered in Card */}
-              <div className="bg-white/90 backdrop-blur-md rounded-2xl p-3.5 sm:p-5 border border-blue-100/90 shadow-2xs text-center my-auto flex flex-col items-center justify-center">
+              <div className="bg-white rounded-2xl p-3.5 sm:p-5 border border-blue-100/90 shadow-2xs text-center my-auto flex flex-col items-center justify-center">
                 <span className="text-[9px] sm:text-[10px] text-slate-500 font-bold uppercase tracking-wider block">Average Candidate Match</span>
                 <p className="text-2xl sm:text-3xl font-extrabold text-blue-600 my-1 sm:my-1.5">92 / 100</p>
                 <span className="text-[9px] sm:text-[10px] text-emerald-700 font-semibold block">Top 3% Application Probability</span>
@@ -160,7 +160,7 @@ export const CareerTools: React.FC<CareerToolsProps> = ({ onSelectTool }) => {
                 />
                 
                 {/* Live Shareable Link Pill */}
-                <div className="absolute bottom-2 left-2 right-2 bg-slate-900/90 backdrop-blur-md p-1.5 sm:p-2 rounded-xl border border-slate-700/80 text-white flex items-center justify-between shadow-lg">
+                <div className="absolute bottom-2 left-2 right-2 bg-slate-900/95 p-1.5 sm:p-2 rounded-xl border border-slate-700/80 text-white flex items-center justify-between shadow-lg">
                   <div className="flex items-center gap-1.5 min-w-0">
                     <Link className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-400 shrink-0" />
                     <span className="text-[10px] sm:text-[11px] font-mono text-emerald-300 truncate font-semibold">

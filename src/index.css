@@ -3,11 +3,17 @@
 @layer base {
   html {
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
   }
   
   h1, h2, h3, h4, .font-display {
     font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+  }
+
+  /* Prevent mobile GPU compositing layer tears on elements with blend modes or transforms */
+  img {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
   }
 }
 

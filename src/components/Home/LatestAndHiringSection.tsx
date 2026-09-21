@@ -68,7 +68,7 @@ export const LatestAndHiringSection: React.FC = () => {
         </div>
 
         {/* Right Card: Are You Hiring? (approx 40-42% width) */}
-        <div className="lg:col-span-5 bg-gradient-to-br from-[#F5F8FF] via-[#EFF5FF] to-[#E9F1FE] border border-blue-100/90 rounded-2xl sm:rounded-3xl p-4 sm:p-7 relative overflow-hidden flex flex-col justify-between shadow-2xs">
+        <div className="lg:col-span-5 bg-gradient-to-br from-[#F5F8FF] via-[#EFF5FF] to-[#E9F1FE] border border-blue-100/90 rounded-2xl sm:rounded-3xl p-4 sm:p-7 relative overflow-hidden flex flex-col justify-between shadow-2xs isolate">
           
           {/* Subtle Decorative Stars / Sparkles */}
           <div className="absolute top-4 right-20 text-amber-300 opacity-60 text-xs">✦</div>

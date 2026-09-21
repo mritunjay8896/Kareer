@@ -53,7 +53,7 @@ export const ThreePillarsSection: React.FC = () => {
           return (
             <div
               key={card.btnText}
-              className={`bg-white border border-slate-200/90 rounded-xl sm:rounded-2xl p-3 sm:p-5 md:p-6 shadow-xs hover:shadow-md transition-all duration-300 relative overflow-hidden group ${
+              className={`bg-white border border-slate-200/90 rounded-xl sm:rounded-2xl p-3 sm:p-5 md:p-6 shadow-xs hover:shadow-md transition-all duration-300 relative overflow-hidden group isolate ${
                 isFeaturedMobile
                   ? 'col-span-2 md:col-span-1 flex flex-row items-center justify-between gap-2.5 sm:gap-4'
                   : 'col-span-1 md:col-span-1 flex flex-col md:flex-row justify-between items-start md:items-center gap-2 sm:gap-4'

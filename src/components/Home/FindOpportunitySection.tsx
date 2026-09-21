@@ -46,7 +46,7 @@ export const FindOpportunitySection: React.FC = () => {
         {/* Bento Grid: Left Hero Card + Right Opportunity Cards */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-4 lg:gap-5 items-stretch mt-2.5 sm:mt-4">
           {/* Left Hero Card (Your Career Journey Starts Here) */}
-          <div className="lg:col-span-4 bg-gradient-to-b from-[#EEF4FE] via-[#E8F1FD] to-[#DFECFD] border border-blue-100/90 rounded-2xl sm:rounded-3xl p-3.5 sm:p-6 flex flex-col justify-between shadow-xs relative overflow-hidden">
+          <div className="lg:col-span-4 bg-gradient-to-b from-[#EEF4FE] via-[#E8F1FD] to-[#DFECFD] border border-blue-100/90 rounded-2xl sm:rounded-3xl p-3.5 sm:p-6 flex flex-col justify-between shadow-xs relative overflow-hidden isolate">
             {/* Top Left Badge */}
             <div className="flex items-center justify-between z-10">
               <span className="inline-flex items-center gap-1.5 bg-white/90 text-blue-600 text-[11px] sm:text-xs font-bold px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border border-blue-100 shadow-2xs">
@@ -120,7 +120,7 @@ export const FindOpportunitySection: React.FC = () => {
               {/* Card 1: Internships */}
               <Link
                 to="/internships"
-                className="bg-[#F8F5FF] border border-purple-100/90 rounded-xl sm:rounded-2xl p-2.5 sm:p-4.5 flex flex-col justify-between h-full shadow-2xs hover:shadow-md transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group"
+                className="bg-[#F8F5FF] border border-purple-100/90 rounded-xl sm:rounded-2xl p-2.5 sm:p-4.5 flex flex-col justify-between h-full shadow-2xs hover:shadow-md transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group isolate"
               >
                 <div>
                   <div className="w-6.5 h-6.5 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center mb-1.5 sm:mb-3">
@@ -148,7 +148,7 @@ export const FindOpportunitySection: React.FC = () => {
               {/* Card 2: Challenges & Hackathons */}
               <Link
                 to="/challenges"
-                className="bg-[#FFFDF4] border border-amber-100/90 rounded-xl sm:rounded-2xl p-2.5 sm:p-4.5 flex flex-col justify-between h-full shadow-2xs hover:shadow-md transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group"
+                className="bg-[#FFFDF4] border border-amber-100/90 rounded-xl sm:rounded-2xl p-2.5 sm:p-4.5 flex flex-col justify-between h-full shadow-2xs hover:shadow-md transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group isolate"
               >
                 <div>
                   <div className="w-6.5 h-6.5 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center mb-1.5 sm:mb-3">
@@ -176,7 +176,7 @@ export const FindOpportunitySection: React.FC = () => {
               {/* Card 3: Fresher Jobs */}
               <Link
                 to="/jobs?experience=Fresher"
-                className="bg-[#F1F7FF] border border-blue-100/90 rounded-xl sm:rounded-2xl p-2.5 sm:p-4.5 flex flex-col justify-between h-full shadow-2xs hover:shadow-md transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group"
+                className="bg-[#F1F7FF] border border-blue-100/90 rounded-xl sm:rounded-2xl p-2.5 sm:p-4.5 flex flex-col justify-between h-full shadow-2xs hover:shadow-md transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group isolate"
               >
                 <div>
                   <div className="w-6.5 h-6.5 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center mb-1.5 sm:mb-3">
@@ -204,7 +204,7 @@ export const FindOpportunitySection: React.FC = () => {
               {/* Card 4: Campus Hiring */}
               <Link
                 to="/jobs?type=campus"
-                className="bg-[#F2FDF6] border border-emerald-100/90 rounded-xl sm:rounded-2xl p-2.5 sm:p-4.5 flex flex-col justify-between h-full shadow-2xs hover:shadow-md transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group"
+                className="bg-[#F2FDF6] border border-emerald-100/90 rounded-xl sm:rounded-2xl p-2.5 sm:p-4.5 flex flex-col justify-between h-full shadow-2xs hover:shadow-md transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group isolate"
               >
                 <div>
                   <div className="w-6.5 h-6.5 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center mb-1.5 sm:mb-3">
@@ -235,7 +235,7 @@ export const FindOpportunitySection: React.FC = () => {
               {/* Card 5: Off-Campus Hiring */}
               <Link
                 to="/jobs?type=off-campus"
-                className="bg-[#FFF4F5] border border-rose-100/90 rounded-xl sm:rounded-2xl p-2.5 sm:p-4.5 flex flex-col justify-between h-full shadow-2xs hover:shadow-md transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group"
+                className="bg-[#FFF4F5] border border-rose-100/90 rounded-xl sm:rounded-2xl p-2.5 sm:p-4.5 flex flex-col justify-between h-full shadow-2xs hover:shadow-md transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group isolate"
               >
                 <div>
                   <div className="w-6.5 h-6.5 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center mb-1.5 sm:mb-3">
@@ -263,7 +263,7 @@ export const FindOpportunitySection: React.FC = () => {
               {/* Card 6: Government Jobs */}
               <Link
                 to="/government-jobs"
-                className="bg-[#F0FDFC] border border-teal-100/90 rounded-xl sm:rounded-2xl p-2.5 sm:p-4.5 flex flex-col justify-between h-full shadow-2xs hover:shadow-md transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group"
+                className="bg-[#F0FDFC] border border-teal-100/90 rounded-xl sm:rounded-2xl p-2.5 sm:p-4.5 flex flex-col justify-between h-full shadow-2xs hover:shadow-md transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group isolate"
               >
                 <div>
                   <div className="w-6.5 h-6.5 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-teal-100 text-teal-700 flex items-center justify-center mb-1.5 sm:mb-3">
@@ -291,7 +291,7 @@ export const FindOpportunitySection: React.FC = () => {
               {/* Card 7: Global Opportunities (featured banner on mobile, 1 col on desktop) */}
               <Link
                 to="/jobs?location=Global"
-                className="col-span-2 sm:col-span-1 bg-[#F5F4FF] border border-indigo-100/90 rounded-xl sm:rounded-2xl p-2.5 sm:p-4.5 flex flex-row sm:flex-col justify-between items-center sm:items-stretch h-full shadow-2xs hover:shadow-md transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group"
+                className="col-span-2 sm:col-span-1 bg-[#F5F4FF] border border-indigo-100/90 rounded-xl sm:rounded-2xl p-2.5 sm:p-4.5 flex flex-row sm:flex-col justify-between items-center sm:items-stretch h-full shadow-2xs hover:shadow-md transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group isolate"
               >
                 <div className="flex items-center sm:block gap-2 sm:gap-0">
                   <div className="w-6.5 h-6.5 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center sm:mb-3 shrink-0">

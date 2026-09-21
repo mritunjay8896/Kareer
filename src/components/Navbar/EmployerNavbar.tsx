@@ -50,10 +50,10 @@ export const EmployerNavbar: React.FC = () => {
 
   return (
     <header 
-      className={`fixed top-0 left-0 right-0 z-40 h-[64px] transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-40 h-[64px] transition-all duration-200 ${
         scrolled
-          ? 'bg-white/95 backdrop-blur-xl border-b border-slate-200/80 shadow-md shadow-slate-900/5'
-          : 'bg-white/90 backdrop-blur-md border-b border-slate-100 shadow-2xs'
+          ? 'bg-white border-b border-slate-200 shadow-sm shadow-slate-900/5'
+          : 'bg-white border-b border-slate-200/90 shadow-2xs'
       }`}
     >
       <div className="max-w-[1440px] w-full mx-auto h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-3">

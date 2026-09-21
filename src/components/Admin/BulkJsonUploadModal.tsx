@@ -221,7 +221,7 @@ export const BulkJsonUploadModal: React.FC<BulkJsonUploadModalProps> = ({
   const validCount = parsedJobs.filter(j => j.isValid).length;
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+    <div className="fixed inset-0 z-50 bg-slate-900/70 flex items-center justify-center p-4 overflow-y-auto">
       <div className="bg-white rounded-2xl max-w-3xl w-full p-6 shadow-2xl border border-slate-200 my-8 flex flex-col max-h-[90vh]">
         
         {/* Modal Header */}

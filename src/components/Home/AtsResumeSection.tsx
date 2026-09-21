@@ -6,7 +6,7 @@ import heroStudentImg from '../../assets/images/hero_student_1788459979282.jpg';
 export const AtsResumeSection: React.FC = () => {
   return (
     <section className="w-full bg-white py-4 sm:py-8 px-2.5 sm:px-6 lg:px-8">
-      <div className="max-w-[1340px] mx-auto bg-gradient-to-r from-[#EFF5FF] via-[#F4F8FF] to-[#EDF3FF] border border-blue-100/80 rounded-2xl sm:rounded-3xl p-4 sm:p-8 lg:p-10 relative overflow-hidden">
+      <div className="max-w-[1340px] mx-auto bg-gradient-to-r from-[#EFF5FF] via-[#F4F8FF] to-[#EDF3FF] border border-blue-100/80 rounded-2xl sm:rounded-3xl p-4 sm:p-8 lg:p-10 relative overflow-hidden isolate">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-8 lg:gap-10 items-center">
           
           {/* Left Column */}

@@ -68,16 +68,15 @@ export const FigmaHero: React.FC<FigmaHeroProps> = ({ onOpenAuth }) => {
           {/* Main Visual Canvas Area */}
           <div className="relative w-full max-w-[480px] sm:max-w-[540px] lg:max-w-[600px] xl:max-w-[680px] 2xl:max-w-[760px] flex items-center justify-center">
             
-            {/* Multi-layered Fading Light Blur Background Mixing Seamlessly */}
-            <div className="absolute -inset-4 sm:-inset-8 rounded-full bg-gradient-to-tr from-blue-100/50 via-sky-50/60 to-indigo-100/40 blur-2xl lg:blur-3xl pointer-events-none -z-0 opacity-80" />
-            <div className="absolute inset-2 sm:inset-4 rounded-full bg-gradient-to-b from-white/20 via-sky-100/40 to-blue-50/60 blur-xl pointer-events-none -z-0" />
+            {/* Soft subtle radial ambient background that is GPU-safe on mobile */}
+            <div className="absolute -inset-4 sm:-inset-6 rounded-3xl bg-gradient-to-tr from-blue-50/70 via-sky-50/50 to-indigo-50/40 pointer-events-none -z-0 opacity-80" />
 
-            {/* Center Main Student Image - Scaled dynamically so it fills the screen without excessive separation */}
+            {/* Center Main Student Image - Scaled dynamically without buggy CSS mask */}
             <div className="relative z-10 w-full flex items-center justify-center px-1">
               <img
                 src={jobForAllImg}
                 alt="Build Your Career Before You Graduate"
-                className="w-full h-auto object-contain max-h-[200px] sm:max-h-[420px] md:max-h-[460px] lg:max-h-[500px] xl:max-h-[580px] 2xl:max-h-[640px] drop-shadow-[0_14px_35px_rgba(37,99,235,0.12)] select-none [mask-image:linear-gradient(to_bottom,black_94%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,black_94%,transparent_100%)]"
+                className="w-full h-auto object-contain max-h-[200px] sm:max-h-[420px] md:max-h-[460px] lg:max-h-[500px] xl:max-h-[580px] 2xl:max-h-[640px] drop-shadow-sm select-none"
                 loading="eager"
               />
             </div>

@@ -14,7 +14,7 @@ import {
 export const NoExperienceSection: React.FC = () => {
   return (
     <section className="w-full bg-white py-2 sm:py-4 px-2 sm:px-6 lg:px-8">
-      <div className="max-w-[1340px] mx-auto bg-slate-50/75 border border-slate-200/85 rounded-xl sm:rounded-2xl py-3.5 sm:py-5 px-3.5 sm:px-8 overflow-hidden">
+      <div className="max-w-[1340px] mx-auto bg-slate-50/75 border border-slate-200/85 rounded-xl sm:rounded-2xl py-3.5 sm:py-5 px-3.5 sm:px-8 overflow-hidden isolate">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5 sm:gap-5 lg:gap-6 items-center">
           
           {/* Left Text */}

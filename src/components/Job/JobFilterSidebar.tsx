@@ -273,7 +273,7 @@ export const JobFilterSidebar: React.FC<JobFilterSidebarProps> = ({
 
       {/* Mobile Drawer */}
       {isMobileOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden flex justify-end bg-slate-900/60 backdrop-blur-xs">
+        <div className="fixed inset-0 z-50 lg:hidden flex justify-end bg-slate-900/60">
           <div className="w-full max-w-xs bg-white h-full overflow-y-auto p-4 flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-100">

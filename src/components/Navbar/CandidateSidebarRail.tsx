@@ -38,7 +38,7 @@ export const CandidateSidebarRail: React.FC = () => {
   ];
 
   return (
-    <aside className="fixed left-0 top-[64px] bottom-0 z-30 w-16 bg-white/95 backdrop-blur-md border-r border-slate-200/80 hidden md:flex flex-col items-center justify-between py-3 shadow-2xs transition-all duration-300">
+    <aside className="fixed left-0 top-[64px] bottom-0 z-30 w-16 bg-white border-r border-slate-200/90 hidden md:flex flex-col items-center justify-between py-3 shadow-2xs transition-all duration-200">
       {/* Navigation Icons */}
       <div className="w-full flex flex-col items-center gap-1.5 px-2">
         {navItems.map((item) => {

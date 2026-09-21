@@ -33,7 +33,7 @@ export const Hero: React.FC<HeroProps> = ({ onExploreClick }) => {
     <section className="pt-6 sm:pt-8 lg:pt-10 pb-8 sm:pb-12 w-full bg-white overflow-hidden relative">
       {/* Background radial soft ambient lights */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl 2xl:max-w-[1440px] h-[500px] bg-gradient-to-b from-blue-50/80 via-indigo-50/20 to-transparent -z-10 pointer-events-none rounded-b-[60px]" />
-      <div className="absolute top-20 right-10 w-96 h-96 bg-sky-200/20 rounded-full blur-3xl -z-10 pointer-events-none" />
+      <div className="absolute top-20 right-10 w-96 h-96 bg-sky-100/30 rounded-full -z-10 pointer-events-none" />
 
       <div className="max-w-7xl 2xl:max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-1 sm:gap-8 xl:gap-12 items-center">
@@ -58,8 +58,8 @@ export const Hero: React.FC<HeroProps> = ({ onExploreClick }) => {
               Find verified Jobs, Internships, Challenges & Hackathons, Govt Notices, AI Resume Builder, and Portfolios in one seamless platform.
             </p>
 
-            {/* Light Glassmorphic Job Filter Bar */}
-            <div className="bg-white/70 backdrop-blur-xl border border-white/90 rounded-2xl p-3.5 sm:p-4 shadow-xl shadow-slate-200/60 max-w-xl space-y-3">
+            {/* Job Filter Bar */}
+            <div className="bg-white border border-slate-200/90 rounded-2xl p-3.5 sm:p-4 shadow-lg shadow-slate-200/60 max-w-xl space-y-3">
               <form onSubmit={handleSearchSubmit} className="flex flex-col sm:flex-row items-center gap-2.5">
                 {/* Search Input */}
                 <div className="relative flex-1 w-full">

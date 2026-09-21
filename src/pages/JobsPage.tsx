@@ -326,7 +326,7 @@ export const JobsPage: React.FC<JobsPageProps> = ({
             {/* No Experience Yet / Break The Loop Card */}
             <div 
               id="no-experience-career-card"
-              className="bg-white rounded-xl sm:rounded-[22px] border border-[#DCE8F8] shadow-[0_4px_20px_rgba(21,101,237,0.08)] relative overflow-hidden transition-all duration-300 flex flex-col justify-between p-3.5 sm:p-5"
+              className="bg-white rounded-xl sm:rounded-[22px] border border-[#DCE8F8] shadow-[0_4px_20px_rgba(21,101,237,0.08)] relative overflow-hidden transition-all duration-300 flex flex-col justify-between p-3.5 sm:p-5 isolate"
             >
               {/* Header with Badges & Collapsable/Popup Button */}
               <div className="flex items-center justify-between gap-2 relative z-20 mb-2 sm:mb-2.5">
@@ -357,7 +357,7 @@ export const JobsPage: React.FC<JobsPageProps> = ({
 
               {/* Subtle pale-blue abstract blob/shape behind the boy */}
               <div className="absolute right-0 top-0 w-[68%] h-[82%] bg-[#EDF5FE] rounded-bl-[120px] rounded-tl-[30px] pointer-events-none z-0" />
-              <div className="absolute right-0 bottom-14 w-44 h-44 bg-[#E2EEFD] rounded-full blur-2xl pointer-events-none z-0 opacity-70" />
+              <div className="absolute right-0 bottom-14 w-44 h-44 bg-gradient-to-tl from-[#E2EEFD] to-transparent rounded-full pointer-events-none z-0 opacity-70" />
 
               {/* Upper-right handwritten-style career annotation */}
               <div className="absolute top-10 right-3 sm:top-12 sm:right-4 select-none pointer-events-none z-10">
@@ -468,11 +468,11 @@ export const JobsPage: React.FC<JobsPageProps> = ({
       {isCareerPopupOpen && (
         <div 
           id="career-card-popup-modal"
-          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/65 backdrop-blur-xs animate-in fade-in duration-200"
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/65 animate-in fade-in duration-200"
           onClick={() => setIsCareerPopupOpen(false)}
         >
           <div 
-            className="bg-white rounded-2xl sm:rounded-[26px] p-4 sm:p-6 md:p-7 border border-[#DCE8F8] shadow-[0_20px_60px_rgba(15,23,42,0.25)] relative overflow-hidden w-full max-w-[420px] sm:max-w-[450px] max-h-[92vh] overflow-y-auto"
+            className="bg-white rounded-2xl sm:rounded-[26px] p-4 sm:p-6 md:p-7 border border-[#DCE8F8] shadow-[0_20px_60px_rgba(15,23,42,0.25)] relative overflow-hidden w-full max-w-[420px] sm:max-w-[450px] max-h-[92vh] overflow-y-auto isolate"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close Button */}
@@ -488,7 +488,7 @@ export const JobsPage: React.FC<JobsPageProps> = ({
 
             {/* Subtle pale-blue abstract shapes */}
             <div className="absolute right-0 top-0 w-[70%] h-[80%] bg-[#EDF5FE] rounded-bl-[130px] rounded-tl-[30px] pointer-events-none z-0" />
-            <div className="absolute right-0 bottom-12 w-48 h-48 bg-[#E2EEFD] rounded-full blur-2xl pointer-events-none z-0 opacity-70" />
+            <div className="absolute right-0 bottom-12 w-48 h-48 bg-gradient-to-tl from-[#E2EEFD] to-transparent rounded-full pointer-events-none z-0 opacity-70" />
 
             {/* Upper-right handwritten annotation */}
             <div className="absolute top-10 right-9 sm:top-12 sm:right-11 select-none pointer-events-none z-10">
