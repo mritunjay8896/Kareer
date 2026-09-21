@@ -62,34 +62,25 @@ export const JobCard: React.FC<JobCardProps> = ({
       <div>
         {/* Top Badges & Actions */}
         <div className="flex items-start justify-between gap-2.5 sm:gap-3 mb-2">
-          <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
-            <Link 
-              to={`/company/${job.companySlug || job.company.toLowerCase().replace(/\s+/g, '-')}`}
-              className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center text-base sm:text-xl font-bold ${job.logoBg || 'bg-slate-900 text-white'} shadow-xs shrink-0 group-hover:scale-105 transition-transform`}
-            >
-              {job.logo}
-            </Link>
-
-            <div className="min-w-0">
-              <div className="flex items-center gap-1.5 flex-wrap">
-                <Link 
-                  to={`/company/${job.companySlug || job.company.toLowerCase().replace(/\s+/g, '-')}`}
-                  className="font-bold text-slate-900 hover:text-blue-600 transition-colors text-[11px] sm:text-sm line-clamp-1"
-                >
-                  {job.company}
-                </Link>
-                {job.verified && (
-                  <CheckCircle2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-blue-600 shrink-0" title="Verified Employer" />
-                )}
-                {job.rating && (
-                  <div className="flex items-center gap-0.5 sm:gap-1 bg-amber-50 px-1 sm:px-1.5 py-0.5 rounded text-[9px] sm:text-[10px] font-semibold text-amber-700 shrink-0">
-                    <Star className="w-2 h-2 sm:w-2.5 sm:h-2.5 fill-amber-400 text-amber-400" />
-                    <span>{job.rating}</span>
-                  </div>
-                )}
-              </div>
-              <p className="text-[10px] sm:text-[11px] text-slate-500 font-medium leading-tight truncate">{job.department || 'Technology & Engineering'}</p>
+          <div className="min-w-0">
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <Link 
+                to={`/company/${job.companySlug || job.company.toLowerCase().replace(/\s+/g, '-')}`}
+                className="font-bold text-slate-900 hover:text-blue-600 transition-colors text-[11px] sm:text-sm line-clamp-1"
+              >
+                {job.company}
+              </Link>
+              {job.verified && (
+                <CheckCircle2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-blue-600 shrink-0" title="Verified Employer" />
+              )}
+              {job.rating && (
+                <div className="flex items-center gap-0.5 sm:gap-1 bg-amber-50 px-1 sm:px-1.5 py-0.5 rounded text-[9px] sm:text-[10px] font-semibold text-amber-700 shrink-0">
+                  <Star className="w-2 h-2 sm:w-2.5 sm:h-2.5 fill-amber-400 text-amber-400" />
+                  <span>{job.rating}</span>
+                </div>
+              )}
             </div>
+            <p className="text-[10px] sm:text-[11px] text-slate-500 font-medium leading-tight truncate">{job.department || 'Technology & Engineering'}</p>
           </div>
 
           <div className="flex items-center gap-0.5 sm:gap-1 shrink-0">

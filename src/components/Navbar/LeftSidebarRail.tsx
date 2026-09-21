@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   Home, 
@@ -11,7 +11,9 @@ import {
   FileText, 
   User, 
   LogIn, 
-  UserPlus
+  UserPlus,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 
 interface LeftSidebarRailProps {
@@ -30,6 +32,34 @@ export const LeftSidebarRail: React.FC<LeftSidebarRailProps> = ({
   const location = useLocation();
   const navigate = useNavigate();
   const currentPath = location.pathname;
+
+  const [isCardCollapsed, setIsCardCollapsed] = useState(false);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+  useEffect(() => {
+    const handleState = (e: any) => {
+      if (e?.detail !== undefined) {
+        setIsCardCollapsed(e.detail);
+      } else {
+        setIsCardCollapsed(prev => !prev);
+      }
+    };
+    const handlePopupState = (e: any) => {
+      if (typeof e?.detail === 'boolean') {
+        setIsPopupOpen(e.detail);
+      }
+    };
+
+    window.addEventListener('career-card-state-changed', handleState);
+    window.addEventListener('toggle-career-card', handleState);
+    window.addEventListener('career-popup-state', handlePopupState);
+
+    return () => {
+      window.removeEventListener('career-card-state-changed', handleState);
+      window.removeEventListener('toggle-career-card', handleState);
+      window.removeEventListener('career-popup-state', handlePopupState);
+    };
+  }, []);
 
   const isHome = currentPath === '/';
 
@@ -101,6 +131,64 @@ export const LeftSidebarRail: React.FC<LeftSidebarRailProps> = ({
             </Link>
           );
         })}
+
+        {/* Collapsable button below profile icon - Vertical Bar Style */}
+        <div className="relative w-full flex justify-center mt-1 mb-0.5">
+          <button
+            id="sidebar-collapse-btn"
+            type="button"
+            onClick={() => {
+              if (location.pathname !== '/jobs') {
+                navigate('/jobs');
+                setTimeout(() => {
+                  window.dispatchEvent(new CustomEvent('open-career-popup'));
+                }, 120);
+              } else {
+                window.dispatchEvent(new CustomEvent('toggle-career-popup'));
+              }
+            }}
+            title="No Experience? View Internship & Career Card Popup"
+            aria-label="No Experience Card Popup"
+            className={`relative w-[30px] sm:w-[34px] md:w-[38px] flex flex-col items-center py-2 sm:py-2.5 px-0.5 rounded-xl sm:rounded-2xl transition-all duration-200 group cursor-pointer border ${
+              isPopupOpen
+                ? 'bg-gradient-to-b from-[#1565ED] to-[#0E56D6] text-white border-[#1565ED] shadow-md shadow-blue-500/35 ring-2 ring-blue-400/40 scale-[1.02]'
+                : 'bg-gradient-to-b from-blue-50/95 via-indigo-50/50 to-blue-50/90 text-[#1565ED] border-blue-200/90 hover:from-[#1565ED] hover:to-[#0E56D6] hover:text-white hover:border-[#1565ED] shadow-2xs hover:scale-[1.02]'
+            }`}
+          >
+            {/* Selected vertical active indicator on left rail edge */}
+            {isPopupOpen && (
+              <span className="absolute -left-[4px] sm:-left-[6px] top-2 bottom-2 w-1.5 bg-[#1565ED] rounded-r-full shadow-xs" />
+            )}
+
+            {/* Icon Box at the top of the vertical bar */}
+            <div className={`w-5 h-5 sm:w-6 sm:h-6 rounded-lg flex items-center justify-center transition-all shrink-0 ${
+              isPopupOpen
+                ? 'bg-white/20 text-white'
+                : 'bg-white text-[#1565ED] shadow-2xs border border-blue-100/80 group-hover:bg-white/20 group-hover:text-white group-hover:border-transparent'
+            }`}>
+              <Rocket className="w-3 h-3 sm:w-3.5 sm:h-3.5 stroke-[2.2] -rotate-12 transition-transform group-hover:scale-110" />
+            </div>
+
+            {/* Vertical Bar Text - Written "No Experience" vertically */}
+            <span
+              className={`[writing-mode:vertical-rl] rotate-180 text-[7.5px] sm:text-[8.5px] md:text-[9px] font-black uppercase tracking-widest whitespace-nowrap select-none my-1.5 transition-colors ${
+                isPopupOpen ? 'text-white' : 'text-[#1565ED] group-hover:text-white'
+              }`}
+            >
+              No Experience
+            </span>
+
+            {/* Micro Dot Accent at the bottom of the vertical bar */}
+            <span className={`w-1.5 h-1.5 rounded-full shrink-0 transition-colors ${
+              isPopupOpen ? 'bg-white/80' : 'bg-[#1565ED]/70 group-hover:bg-white/80'
+            }`} />
+          </button>
+
+          {/* Desktop Hover Tooltip */}
+          <div className="absolute left-full ml-2.5 top-1/2 -translate-y-1/2 px-2.5 py-1 bg-slate-900 text-white text-[11px] font-bold rounded-lg shadow-xl whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-150 z-50 translate-x-1 group-hover:translate-x-0 hidden sm:block border border-slate-800">
+            No Experience? Card Popup
+          </div>
+        </div>
       </div>
 
       {/* Bottom Auth Links */}
