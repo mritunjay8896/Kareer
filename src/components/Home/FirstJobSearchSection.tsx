@@ -7,7 +7,6 @@ import {
   Briefcase, 
   Headphones, 
   UserCheck, 
-  Building2, 
   Globe 
 } from 'lucide-react';
 
@@ -21,8 +20,7 @@ export const FirstJobSearchSection: React.FC = () => {
     { label: 'Entry-Level IT Jobs', sub: 'Start your tech career', icon: Briefcase, color: 'bg-green-50 text-green-600 border-green-100', filter: 'IT' },
     { label: 'BPO / Call Center', sub: 'Customer Support Jobs', icon: Headphones, color: 'bg-purple-50 text-purple-600 border-purple-100', filter: 'BPO' },
     { label: 'Walk-in Jobs', sub: 'Apply & Join', icon: UserCheck, color: 'bg-amber-50 text-amber-600 border-amber-100', filter: 'Walk-in' },
-    { label: 'Campus Hiring', sub: 'On-Campus Jobs', icon: Building2, color: 'bg-sky-50 text-sky-600 border-sky-100', filter: 'Campus' },
-    { label: 'Off-Campus Hiring', sub: 'Apply from anywhere', icon: Globe, color: 'bg-blue-50 text-blue-600 border-blue-100', filter: 'Off-Campus' },
+    { label: 'Remote Jobs', sub: 'Work from anywhere', icon: Globe, color: 'bg-sky-50 text-sky-600 border-sky-100', filter: 'Remote' },
   ];
 
   const popularSearches = [

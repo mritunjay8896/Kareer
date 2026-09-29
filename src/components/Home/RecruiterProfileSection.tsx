@@ -9,15 +9,15 @@ import {
 import heroStudentImg from '../../assets/images/hero_student_1788459979282.jpg';
 
 export const RecruiterProfileSection: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'About' | 'Projects' | 'Internships' | 'Certifications' | 'Achievements'>('About');
+  const [activeTab, setActiveTab] = useState<'About' | 'Projects' | 'Portfolio' | 'Certifications' | 'Achievements'>('About');
 
   const checklist = [
     { label: 'Education', width: 'w-14' },
     { label: 'Skills', width: 'w-14' },
     { label: 'Projects', width: 'w-14' },
-    { label: 'Internships', width: 'w-14' },
-    { label: 'Challenges', width: 'w-14' },
+    { label: 'Portfolio', width: 'w-14' },
     { label: 'Certifications', width: 'w-14' },
+    { label: 'Badges', width: 'w-14' },
   ];
 
   const skillChips = [
@@ -40,7 +40,7 @@ export const RecruiterProfileSection: React.FC = () => {
             </h2>
 
             <p className="text-[11.5px] sm:text-sm text-slate-600 font-normal leading-relaxed max-w-sm">
-              Recruiters discover you based on your skills, projects, education, internships and achievements —not just years of experience.
+              Recruiters discover you based on your skills, projects, education, portfolio and achievements — not just years of experience.
             </p>
 
             <div className="pt-1 sm:pt-2">
@@ -145,7 +145,7 @@ export const RecruiterProfileSection: React.FC = () => {
 
                 {/* Tabs */}
                 <div className="flex items-center gap-2.5 sm:gap-3 border-b border-slate-100 py-1.5 sm:py-2 overflow-x-auto no-scrollbar text-[9.5px] sm:text-[10.5px]">
-                  {(['About', 'Projects', 'Internships', 'Certifications', 'Achievements'] as const).map((tab) => (
+                  {(['About', 'Projects', 'Portfolio', 'Certifications', 'Achievements'] as const).map((tab) => (
                     <button
                       key={tab}
                       onClick={() => setActiveTab(tab)}

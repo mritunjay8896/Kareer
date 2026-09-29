@@ -25,7 +25,7 @@ export const stepsData = [
   {
     step: '03',
     title: 'Gain Experience',
-    desc: 'Internships, challenges and hackathons.',
+    desc: 'Hands-on projects, certifications and training.',
     icon: Lightbulb,
     color: 'bg-amber-50 text-amber-500 border-amber-200'
   },
@@ -39,7 +39,7 @@ export const stepsData = [
   {
     step: '05',
     title: 'Discover Opportunities',
-    desc: 'Find internships, jobs & more.',
+    desc: 'Find fresher roles, career paths & more.',
     icon: Search,
     color: 'bg-purple-50 text-purple-600 border-purple-200'
   },

@@ -15,6 +15,14 @@ service cloud.firestore {
       allow read: if isAuthenticated();
       allow create: if isOwner(userId);
       allow update: if isOwner(userId) && (resource.data.role == request.resource.data.role || !('role' in resource.data));
+
+      match /resumes/{resumeId} {
+        allow read, write: if isOwner(userId);
+      }
+    }
+
+    match /resumes/{resumeId} {
+      allow read, write: if isAuthenticated() && (resource == null || resource.data.userId == request.auth.uid);
     }
 
     // Candidates Profile Collection

@@ -2,9 +2,6 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   Home, 
-  Briefcase, 
-  GraduationCap, 
-  Landmark, 
   Globe, 
   Bookmark, 
   FileText, 
@@ -29,12 +26,9 @@ export const CandidateSidebarRail: React.FC = () => {
 
   const navItems = [
     { label: 'Home', icon: Home, path: '/' },
-    { label: 'All Vacancies', icon: Briefcase, path: '/jobs' },
-    { label: 'Internships', icon: GraduationCap, path: '/internships' },
-    { label: 'Govt Jobs', icon: Landmark, path: '/government-jobs' },
-    { label: 'Mock Tests', icon: FileCode, path: '/mock-tests' },
     { label: 'Resume Builder', icon: FileText, path: '/resume-builder' },
     { label: 'Portfolio', icon: FolderGit2, path: '/portfolio' },
+    { label: 'Mock Tests', icon: FileCode, path: '/mock-tests' },
   ];
 
   return (

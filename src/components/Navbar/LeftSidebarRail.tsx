@@ -2,18 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   Home, 
-  Briefcase, 
-  GraduationCap, 
-  Trophy, 
-  Landmark, 
-  School, 
-  Rocket, 
   FileText, 
+  FolderGit2,
   User, 
   LogIn, 
   UserPlus,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  Rocket
 } from 'lucide-react';
 
 interface LeftSidebarRailProps {
@@ -65,13 +61,8 @@ export const LeftSidebarRail: React.FC<LeftSidebarRailProps> = ({
 
   const navItems = [
     { label: 'Home', icon: Home, path: '/', isHomeItem: true },
-    { label: 'Jobs', icon: Briefcase, path: '/jobs' },
-    { label: 'Internships', icon: GraduationCap, path: '/internships' },
-    { label: 'Challenges', icon: Trophy, path: '/challenges' },
-    { label: 'Govt Jobs', icon: Landmark, path: '/government-jobs' },
-    { label: 'Campus Hiring', icon: School, path: '/jobs?filter=Campus' },
-    { label: 'Off-Campus', icon: Rocket, path: '/jobs?filter=Off-Campus' },
-    { label: 'Applications', icon: FileText, path: '/applied-jobs' },
+    { label: 'Resume Builder', icon: FileText, path: '/resume-builder' },
+    { label: 'Portfolio', icon: FolderGit2, path: '/portfolio' },
     { label: 'Profile', icon: User, path: currentUser ? '/candidate/profile' : '/login' },
   ];
 
@@ -79,19 +70,13 @@ export const LeftSidebarRail: React.FC<LeftSidebarRailProps> = ({
     if (isHomeItem) return isHome;
     if (path === '/') return false;
 
-    // Item has search parameters, e.g. /jobs?filter=Campus
     if (path.includes('?')) {
       const [pathBase, query] = path.split('?');
       return location.pathname === pathBase && location.search.includes(query);
     }
 
-    // Base jobs route: active only when no special filter query is active
     if (path === '/jobs') {
-      return (
-        location.pathname === '/jobs' &&
-        !location.search.includes('filter=Campus') &&
-        !location.search.includes('filter=Off-Campus')
-      );
+      return location.pathname === '/jobs';
     }
 
     return currentPath.startsWith(path);
@@ -147,7 +132,7 @@ export const LeftSidebarRail: React.FC<LeftSidebarRailProps> = ({
                 window.dispatchEvent(new CustomEvent('toggle-career-popup'));
               }
             }}
-            title="No Experience? View Internship & Career Card Popup"
+            title="No Experience? View Career Card Popup"
             aria-label="No Experience Card Popup"
             className={`relative w-[30px] sm:w-[34px] md:w-[38px] flex flex-col items-center py-2 sm:py-2.5 px-0.5 rounded-xl sm:rounded-2xl transition-all duration-200 group cursor-pointer border ${
               isPopupOpen

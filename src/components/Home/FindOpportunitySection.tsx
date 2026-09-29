@@ -2,10 +2,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { 
   GraduationCap, 
-  Trophy, 
+  FileText, 
   Briefcase, 
-  School, 
-  Users, 
+  FileCheck, 
   Landmark, 
   Globe, 
   ArrowRight,
@@ -18,13 +17,11 @@ import { JourneySteps } from './JourneySection';
 
 // 3D Image Assets matching the screenshot
 import studentJourneyImg from '../../assets/images/student_journey_3d_1788699191385.jpg';
-import briefcasePurpleImg from '../../assets/images/briefcase_purple_3d_1788699207337.jpg';
-import trophyGoldImg from '../../assets/images/trophy_gold_3d_1788699294218.jpg';
+import portfolioMockupImg from '../../assets/images/portfolio_mockup_3d_1788540187292.jpg';
 import resumeSearchImg from '../../assets/images/resume_search_3d_1788699221492.jpg';
-import campusBuildingImg from '../../assets/images/campus_building_3d_1788699234850.jpg';
 import megaphoneRoseImg from '../../assets/images/megaphone_rose_3d_1788699247484.jpg';
-import governmentDomeImg from '../../assets/images/government_dome_3d_1788699260897.jpg';
 import globeArrowImg from '../../assets/images/globe_arrow_3d_1788699272839.jpg';
+import backpackImg from '../../assets/images/backpack_illustration_1788459993181.jpg';
 
 export const FindOpportunitySection: React.FC = () => {
   return (
@@ -36,7 +33,7 @@ export const FindOpportunitySection: React.FC = () => {
             Find Your <span className="text-blue-600">Next Opportunity</span>
           </h2>
           <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-2xl mx-auto leading-relaxed">
-            Explore internships, jobs, challenges, hackathons and more — all in one place, designed for students and freshers.
+            Explore fresher jobs, portfolios, AI resumes, and career tools — all in one place, designed for students and freshers.
           </p>
 
           {/* 6 Journey Steps */}
@@ -95,7 +92,7 @@ export const FindOpportunitySection: React.FC = () => {
                 Your Career Journey Starts Here
               </h3>
               <p className="text-xs sm:text-[13px] text-slate-600 leading-relaxed mb-2.5 sm:mb-4">
-                Build your profile, gain skills, complete challenges, get real experience and move closer to your first job.
+                Build your profile, gain skills, create verified portfolios, get real experience and move closer to your first job.
               </p>
               <div className="flex items-center gap-2">
                 <Link
@@ -113,211 +110,147 @@ export const FindOpportunitySection: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Column: 7 Opportunity Cards in a Balanced Responsive Grid */}
-          <div className="lg:col-span-8 flex flex-col lg:grid lg:grid-rows-2 gap-2 sm:gap-3.5 lg:gap-4">
-            {/* Row 1: 4 Cards (2 cols on mobile, 4 cols on desktop) */}
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3.5 lg:gap-4 h-full">
-              {/* Card 1: Internships */}
-              <Link
-                to="/internships"
-                className="bg-[#F8F5FF] border border-purple-100/90 rounded-xl sm:rounded-2xl p-2.5 sm:p-4.5 flex flex-col justify-between h-full shadow-2xs hover:shadow-md transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group isolate"
-              >
-                <div>
-                  <div className="w-6.5 h-6.5 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center mb-1.5 sm:mb-3">
-                    <GraduationCap className="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2.2]" />
-                  </div>
-                  <h4 className="font-extrabold text-xs sm:text-[15px] text-slate-900 group-hover:text-purple-700 transition-colors mb-0.5 sm:mb-1 font-display leading-tight">
-                    Internships
-                  </h4>
-                  <p className="text-[10px] sm:text-[11px] text-slate-500 leading-snug line-clamp-2 sm:line-clamp-none">
-                    Gain real-world experience while you study.
-                  </p>
+          {/* Right Column: Opportunity Cards in a Balanced Responsive Grid */}
+          <div className="lg:col-span-8 grid grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3.5 lg:gap-4 h-full">
+            {/* Card 1: Fresher Jobs */}
+            <Link
+              to="/jobs?experience=Fresher"
+              className="bg-[#F1F7FF] border border-blue-100/90 rounded-xl sm:rounded-2xl p-2.5 sm:p-4.5 flex flex-col justify-between h-full shadow-2xs hover:shadow-md transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group isolate"
+            >
+              <div>
+                <div className="w-6.5 h-6.5 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center mb-1.5 sm:mb-3">
+                  <Briefcase className="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2.2]" />
                 </div>
-                <div className="flex items-end justify-between mt-2 sm:mt-4 pt-1">
-                  <div className="w-5.5 h-5.5 sm:w-7 sm:h-7 rounded-full bg-purple-100 group-hover:bg-purple-600 text-purple-600 group-hover:text-white flex items-center justify-center transition-all shadow-2xs">
-                    <ArrowRight className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 group-hover:translate-x-0.5 transition-transform" />
-                  </div>
-                  <img
-                    src={briefcasePurpleImg}
-                    alt="Internships"
-                    className="w-10 h-10 sm:w-15 sm:h-15 object-contain mix-blend-multiply drop-shadow-xs group-hover:scale-105 transition-transform"
-                  />
+                <h4 className="font-extrabold text-xs sm:text-[15px] text-slate-900 group-hover:text-blue-700 transition-colors mb-0.5 sm:mb-1 font-display leading-tight">
+                  Fresher Jobs
+                </h4>
+                <p className="text-[10px] sm:text-[11px] text-slate-500 leading-snug line-clamp-2 sm:line-clamp-none">
+                  Find your first full-time opportunity.
+                </p>
+              </div>
+              <div className="flex items-end justify-between mt-2 sm:mt-4 pt-1">
+                <div className="w-5.5 h-5.5 sm:w-7 sm:h-7 rounded-full bg-blue-100 group-hover:bg-blue-600 text-blue-600 group-hover:text-white flex items-center justify-center transition-all shadow-2xs">
+                  <ArrowRight className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 group-hover:translate-x-0.5 transition-transform" />
                 </div>
-              </Link>
+                <img
+                  src={resumeSearchImg}
+                  alt="Fresher Jobs"
+                  className="w-10 h-10 sm:w-15 sm:h-15 object-contain mix-blend-multiply drop-shadow-xs group-hover:scale-105 transition-transform"
+                />
+              </div>
+            </Link>
 
-              {/* Card 2: Challenges & Hackathons */}
-              <Link
-                to="/challenges"
-                className="bg-[#FFFDF4] border border-amber-100/90 rounded-xl sm:rounded-2xl p-2.5 sm:p-4.5 flex flex-col justify-between h-full shadow-2xs hover:shadow-md transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group isolate"
-              >
-                <div>
-                  <div className="w-6.5 h-6.5 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center mb-1.5 sm:mb-3">
-                    <Trophy className="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2.2]" />
-                  </div>
-                  <h4 className="font-extrabold text-xs sm:text-[15px] text-slate-900 group-hover:text-amber-700 transition-colors mb-0.5 sm:mb-1 font-display leading-tight">
-                    Challenges & Hackathons
-                  </h4>
-                  <p className="text-[10px] sm:text-[11px] text-slate-500 leading-snug line-clamp-2 sm:line-clamp-none">
-                    Prove your skills, build amazing projects.
-                  </p>
+            {/* Card 3: Skill Verification */}
+            <Link
+              to="/portfolio"
+              className="bg-[#F0FDFC] border border-teal-100/90 rounded-xl sm:rounded-2xl p-2.5 sm:p-4.5 flex flex-col justify-between h-full shadow-2xs hover:shadow-md transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group isolate"
+            >
+              <div>
+                <div className="w-6.5 h-6.5 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-teal-100 text-teal-700 flex items-center justify-center mb-1.5 sm:mb-3">
+                  <Globe className="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2.2]" />
                 </div>
-                <div className="flex items-end justify-between mt-2 sm:mt-4 pt-1">
-                  <div className="w-5.5 h-5.5 sm:w-7 sm:h-7 rounded-full bg-amber-100 group-hover:bg-amber-500 text-amber-600 group-hover:text-white flex items-center justify-center transition-all shadow-2xs">
-                    <ArrowRight className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 group-hover:translate-x-0.5 transition-transform" />
-                  </div>
-                  <img
-                    src={trophyGoldImg}
-                    alt="Challenges & Hackathons"
-                    className="w-10 h-10 sm:w-15 sm:h-15 object-contain mix-blend-multiply drop-shadow-xs group-hover:scale-105 transition-transform"
-                  />
+                <h4 className="font-extrabold text-xs sm:text-[15px] text-slate-900 group-hover:text-teal-700 transition-colors mb-0.5 sm:mb-1 font-display leading-tight">
+                  Skill Verification
+                </h4>
+                <p className="text-[10px] sm:text-[11px] text-slate-500 leading-snug line-clamp-2 sm:line-clamp-none">
+                  Showcase verified code and practical coursework.
+                </p>
+              </div>
+              <div className="flex items-end justify-between mt-2 sm:mt-4 pt-1">
+                <div className="w-5.5 h-5.5 sm:w-7 sm:h-7 rounded-full bg-teal-100 group-hover:bg-teal-600 text-teal-700 group-hover:text-white flex items-center justify-center transition-all shadow-2xs">
+                  <ArrowRight className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 group-hover:translate-x-0.5 transition-transform" />
                 </div>
-              </Link>
+                <img
+                  src={globeArrowImg}
+                  alt="Skill Verification"
+                  className="w-10 h-10 sm:w-15 sm:h-15 object-contain mix-blend-multiply drop-shadow-xs group-hover:scale-105 transition-transform"
+                />
+              </div>
+            </Link>
 
-              {/* Card 3: Fresher Jobs */}
-              <Link
-                to="/jobs?experience=Fresher"
-                className="bg-[#F1F7FF] border border-blue-100/90 rounded-xl sm:rounded-2xl p-2.5 sm:p-4.5 flex flex-col justify-between h-full shadow-2xs hover:shadow-md transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group isolate"
-              >
-                <div>
-                  <div className="w-6.5 h-6.5 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center mb-1.5 sm:mb-3">
-                    <Briefcase className="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2.2]" />
-                  </div>
-                  <h4 className="font-extrabold text-xs sm:text-[15px] text-slate-900 group-hover:text-blue-700 transition-colors mb-0.5 sm:mb-1 font-display leading-tight">
-                    Fresher Jobs
-                  </h4>
-                  <p className="text-[10px] sm:text-[11px] text-slate-500 leading-snug line-clamp-2 sm:line-clamp-none">
-                    Find your first full-time opportunity.
-                  </p>
+            {/* Card 4: Portfolio Builder */}
+            <Link
+              to="/portfolio"
+              className="bg-[#FFFDF4] border border-amber-100/90 rounded-xl sm:rounded-2xl p-2.5 sm:p-4.5 flex flex-col justify-between h-full shadow-2xs hover:shadow-md transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group isolate"
+            >
+              <div>
+                <div className="w-6.5 h-6.5 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center mb-1.5 sm:mb-3">
+                  <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2.2]" />
                 </div>
-                <div className="flex items-end justify-between mt-2 sm:mt-4 pt-1">
-                  <div className="w-5.5 h-5.5 sm:w-7 sm:h-7 rounded-full bg-blue-100 group-hover:bg-blue-600 text-blue-600 group-hover:text-white flex items-center justify-center transition-all shadow-2xs">
-                    <ArrowRight className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 group-hover:translate-x-0.5 transition-transform" />
-                  </div>
-                  <img
-                    src={resumeSearchImg}
-                    alt="Fresher Jobs"
-                    className="w-10 h-10 sm:w-15 sm:h-15 object-contain mix-blend-multiply drop-shadow-xs group-hover:scale-105 transition-transform"
-                  />
+                <h4 className="font-extrabold text-xs sm:text-[15px] text-slate-900 group-hover:text-amber-700 transition-colors mb-0.5 sm:mb-1 font-display leading-tight">
+                  Portfolio Builder
+                </h4>
+                <p className="text-[10px] sm:text-[11px] text-slate-500 leading-snug line-clamp-2 sm:line-clamp-none">
+                  Showcase your projects and get noticed.
+                </p>
+              </div>
+              <div className="flex items-end justify-between mt-2 sm:mt-4 pt-1">
+                <div className="w-5.5 h-5.5 sm:w-7 sm:h-7 rounded-full bg-amber-100 group-hover:bg-amber-500 text-amber-600 group-hover:text-white flex items-center justify-center transition-all shadow-2xs">
+                  <ArrowRight className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 group-hover:translate-x-0.5 transition-transform" />
                 </div>
-              </Link>
+                <img
+                  src={portfolioMockupImg}
+                  alt="Portfolio Builder"
+                  className="w-10 h-10 sm:w-15 sm:h-15 object-contain mix-blend-multiply drop-shadow-xs group-hover:scale-105 transition-transform"
+                />
+              </div>
+            </Link>
 
-              {/* Card 4: Campus Hiring */}
-              <Link
-                to="/jobs?type=campus"
-                className="bg-[#F2FDF6] border border-emerald-100/90 rounded-xl sm:rounded-2xl p-2.5 sm:p-4.5 flex flex-col justify-between h-full shadow-2xs hover:shadow-md transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group isolate"
-              >
-                <div>
-                  <div className="w-6.5 h-6.5 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center mb-1.5 sm:mb-3">
-                    <School className="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2.2]" />
-                  </div>
-                  <h4 className="font-extrabold text-xs sm:text-[15px] text-slate-900 group-hover:text-emerald-700 transition-colors mb-0.5 sm:mb-1 font-display leading-tight">
-                    Campus Hiring
-                  </h4>
-                  <p className="text-[10px] sm:text-[11px] text-slate-500 leading-snug line-clamp-2 sm:line-clamp-none">
-                    Discover opportunities from your college.
-                  </p>
+            {/* Card 5: AI Resume Builder */}
+            <Link
+              to="/resume-builder"
+              className="bg-[#FFF4F5] border border-rose-100/90 rounded-xl sm:rounded-2xl p-2.5 sm:p-4.5 flex flex-col justify-between h-full shadow-2xs hover:shadow-md transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group isolate"
+            >
+              <div>
+                <div className="w-6.5 h-6.5 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center mb-1.5 sm:mb-3">
+                  <FileCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2.2]" />
                 </div>
-                <div className="flex items-end justify-between mt-2 sm:mt-4 pt-1">
-                  <div className="w-5.5 h-5.5 sm:w-7 sm:h-7 rounded-full bg-emerald-100 group-hover:bg-emerald-600 text-emerald-600 group-hover:text-white flex items-center justify-center transition-all shadow-2xs">
-                    <ArrowRight className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 group-hover:translate-x-0.5 transition-transform" />
-                  </div>
-                  <img
-                    src={campusBuildingImg}
-                    alt="Campus Hiring"
-                    className="w-10 h-10 sm:w-15 sm:h-15 object-contain mix-blend-multiply drop-shadow-xs group-hover:scale-105 transition-transform"
-                  />
+                <h4 className="font-extrabold text-xs sm:text-[15px] text-slate-900 group-hover:text-rose-700 transition-colors mb-0.5 sm:mb-1 font-display leading-tight">
+                  AI Resume Builder
+                </h4>
+                <p className="text-[10px] sm:text-[11px] text-slate-500 leading-snug line-clamp-2 sm:line-clamp-none">
+                  Build ATS-proof resumes in minutes.
+                </p>
+              </div>
+              <div className="flex items-end justify-between mt-2 sm:mt-4 pt-1">
+                <div className="w-5.5 h-5.5 sm:w-7 sm:h-7 rounded-full bg-rose-100 group-hover:bg-rose-600 text-rose-600 group-hover:text-white flex items-center justify-center transition-all shadow-2xs">
+                  <ArrowRight className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 group-hover:translate-x-0.5 transition-transform" />
                 </div>
-              </Link>
-            </div>
+                <img
+                  src={megaphoneRoseImg}
+                  alt="AI Resume Builder"
+                  className="w-10 h-10 sm:w-15 sm:h-15 object-contain mix-blend-multiply drop-shadow-xs group-hover:scale-105 transition-transform"
+                />
+              </div>
+            </Link>
 
-            {/* Row 2: 3 Cards (2 cols on mobile with featured last card, 3 cols on desktop) */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3.5 lg:gap-4 h-full">
-              {/* Card 5: Off-Campus Hiring */}
-              <Link
-                to="/jobs?type=off-campus"
-                className="bg-[#FFF4F5] border border-rose-100/90 rounded-xl sm:rounded-2xl p-2.5 sm:p-4.5 flex flex-col justify-between h-full shadow-2xs hover:shadow-md transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group isolate"
-              >
-                <div>
-                  <div className="w-6.5 h-6.5 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center mb-1.5 sm:mb-3">
-                    <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2.2]" />
-                  </div>
-                  <h4 className="font-extrabold text-xs sm:text-[15px] text-slate-900 group-hover:text-rose-700 transition-colors mb-0.5 sm:mb-1 font-display leading-tight">
-                    Off-Campus Hiring
-                  </h4>
-                  <p className="text-[10px] sm:text-[11px] text-slate-500 leading-snug line-clamp-2 sm:line-clamp-none">
-                    Explore opportunities beyond campus.
-                  </p>
+            {/* Card 5: No Experience Jobs */}
+            <Link
+              to="/jobs?experience=Fresher"
+              className="bg-[#F5F4FF] border border-indigo-100/90 rounded-xl sm:rounded-2xl p-2.5 sm:p-4.5 flex flex-col justify-between h-full shadow-2xs hover:shadow-md transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group isolate cursor-pointer"
+            >
+              <div>
+                <div className="w-6.5 h-6.5 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center mb-1.5 sm:mb-3">
+                  <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2.2]" />
                 </div>
-                <div className="flex items-end justify-between mt-2 sm:mt-4 pt-1">
-                  <div className="w-5.5 h-5.5 sm:w-7 sm:h-7 rounded-full bg-rose-100 group-hover:bg-rose-600 text-rose-600 group-hover:text-white flex items-center justify-center transition-all shadow-2xs">
-                    <ArrowRight className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 group-hover:translate-x-0.5 transition-transform" />
-                  </div>
-                  <img
-                    src={megaphoneRoseImg}
-                    alt="Off-Campus Hiring"
-                    className="w-10 h-10 sm:w-15 sm:h-15 object-contain mix-blend-multiply drop-shadow-xs group-hover:scale-105 transition-transform"
-                  />
+                <h4 className="font-extrabold text-xs sm:text-[15px] text-slate-900 group-hover:text-indigo-700 transition-colors mb-0.5 sm:mb-1 font-display leading-tight">
+                  No Experience Jobs
+                </h4>
+                <p className="text-[10px] sm:text-[11px] text-slate-500 leading-snug line-clamp-2 sm:line-clamp-none">
+                  Break the "No Job, No Experience" loop with verified starter roles.
+                </p>
+              </div>
+              <div className="flex items-end justify-between mt-2 sm:mt-4 pt-1">
+                <div className="w-5.5 h-5.5 sm:w-7 sm:h-7 rounded-full bg-indigo-100 group-hover:bg-indigo-600 text-indigo-600 group-hover:text-white flex items-center justify-center transition-all shadow-2xs">
+                  <ArrowRight className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 group-hover:translate-x-0.5 transition-transform" />
                 </div>
-              </Link>
-
-              {/* Card 6: Government Jobs */}
-              <Link
-                to="/government-jobs"
-                className="bg-[#F0FDFC] border border-teal-100/90 rounded-xl sm:rounded-2xl p-2.5 sm:p-4.5 flex flex-col justify-between h-full shadow-2xs hover:shadow-md transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group isolate"
-              >
-                <div>
-                  <div className="w-6.5 h-6.5 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-teal-100 text-teal-700 flex items-center justify-center mb-1.5 sm:mb-3">
-                    <Landmark className="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2.2]" />
-                  </div>
-                  <h4 className="font-extrabold text-xs sm:text-[15px] text-slate-900 group-hover:text-teal-700 transition-colors mb-0.5 sm:mb-1 font-display leading-tight">
-                    Government Jobs
-                  </h4>
-                  <p className="text-[10px] sm:text-[11px] text-slate-500 leading-snug line-clamp-2 sm:line-clamp-none">
-                    Access government opportunities & notices.
-                  </p>
-                </div>
-                <div className="flex items-end justify-between mt-2 sm:mt-4 pt-1">
-                  <div className="w-5.5 h-5.5 sm:w-7 sm:h-7 rounded-full bg-teal-100 group-hover:bg-teal-600 text-teal-700 group-hover:text-white flex items-center justify-center transition-all shadow-2xs">
-                    <ArrowRight className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 group-hover:translate-x-0.5 transition-transform" />
-                  </div>
-                  <img
-                    src={governmentDomeImg}
-                    alt="Government Jobs"
-                    className="w-10 h-10 sm:w-15 sm:h-15 object-contain mix-blend-multiply drop-shadow-xs group-hover:scale-105 transition-transform"
-                  />
-                </div>
-              </Link>
-
-              {/* Card 7: Global Opportunities (featured banner on mobile, 1 col on desktop) */}
-              <Link
-                to="/jobs?location=Global"
-                className="col-span-2 sm:col-span-1 bg-[#F5F4FF] border border-indigo-100/90 rounded-xl sm:rounded-2xl p-2.5 sm:p-4.5 flex flex-row sm:flex-col justify-between items-center sm:items-stretch h-full shadow-2xs hover:shadow-md transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group isolate"
-              >
-                <div className="flex items-center sm:block gap-2 sm:gap-0">
-                  <div className="w-6.5 h-6.5 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center sm:mb-3 shrink-0">
-                    <Globe className="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2.2]" />
-                  </div>
-                  <div>
-                    <h4 className="font-extrabold text-xs sm:text-[15px] text-slate-900 group-hover:text-indigo-700 transition-colors mb-0.5 sm:mb-1 font-display leading-tight">
-                      Global Opportunities
-                    </h4>
-                    <p className="text-[10px] sm:text-[11px] text-slate-500 leading-snug">
-                      Explore international opportunities.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center sm:items-end justify-end sm:justify-between shrink-0 gap-2 sm:gap-0 sm:mt-4 sm:pt-1">
-                  <div className="w-5.5 h-5.5 sm:w-7 sm:h-7 rounded-full bg-indigo-100 group-hover:bg-indigo-600 text-indigo-600 group-hover:text-white flex items-center justify-center transition-all shadow-2xs">
-                    <ArrowRight className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 group-hover:translate-x-0.5 transition-transform" />
-                  </div>
-                  <img
-                    src={globeArrowImg}
-                    alt="Global Opportunities"
-                    className="w-10 h-10 sm:w-15 sm:h-15 object-contain mix-blend-multiply drop-shadow-xs group-hover:scale-105 transition-transform"
-                  />
-                </div>
-              </Link>
-            </div>
+                <img
+                  src={backpackImg}
+                  alt="No Experience Jobs"
+                  className="w-10 h-10 sm:w-15 sm:h-15 object-contain mix-blend-multiply drop-shadow-xs group-hover:scale-105 transition-transform"
+                />
+              </div>
+            </Link>
           </div>
         </div>
       </div>

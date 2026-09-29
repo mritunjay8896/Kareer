@@ -25,7 +25,7 @@ export const EmployerCTA: React.FC<EmployerCTAProps> = ({ onJobPublished }) => {
     { title: 'AI Candidate Matching', desc: 'Rank top candidates automatically based on skill assessments.' },
     { title: 'Resume Filtering', desc: 'Filter out unformatted CVs with enterprise ATS criteria.' },
     { title: 'Skill Verification', desc: 'Pre-screen applicants with automated coding and aptitude tests.' },
-    { title: 'Campus Hiring Drives', desc: 'Access tier-1, tier-2 & tier-3 engineering and degree colleges.' },
+    { title: 'College Talent Network', desc: 'Access pre-vetted students from tier-1, tier-2 & tier-3 universities.' },
     { title: 'One Click Job Posting', desc: 'Distribute vacancies to 100,000+ candidates instantly.' }
   ];
 

@@ -1,6 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
-import jobForAllImg from '../../image1/jobforall.png';
+import heroStudentImg from '../../assets/images/hero_student_1788459979282.jpg';
 
 interface FinalCtaBannerProps {
   onOpenAuth: (mode: 'login' | 'register') => void;
@@ -8,63 +9,78 @@ interface FinalCtaBannerProps {
 
 export const FinalCtaBanner: React.FC<FinalCtaBannerProps> = ({ onOpenAuth }) => {
   return (
-    <section className="w-full bg-white py-6 sm:py-10 px-2.5 sm:px-6 lg:px-8">
-      <div className="max-w-[1340px] mx-auto bg-gradient-to-r from-blue-50/90 via-indigo-50/60 to-slate-50 border border-blue-100 rounded-2xl sm:rounded-3xl p-4 sm:p-10 lg:p-12 overflow-hidden">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-8 items-center">
+    <section className="w-full bg-white py-8 sm:py-12 px-3 sm:px-6 lg:px-8">
+      <div className="max-w-[1340px] mx-auto bg-gradient-to-r from-[#EFF6FF] via-[#EEF4FF] to-[#E8F0FE] border border-blue-100 rounded-3xl p-6 sm:p-10 lg:p-12 relative overflow-hidden shadow-xs">
+        
+        {/* Decorative background shapes */}
+        <div className="absolute top-0 right-0 w-80 h-80 bg-blue-200/30 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-1/3 w-64 h-64 bg-indigo-200/30 rounded-full blur-2xl pointer-events-none" />
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
           
-          {/* Left Column */}
-          <div className="w-full lg:col-span-7 space-y-2.5 sm:space-y-4">
-            <span className="inline-flex items-center text-[9px] sm:text-xs font-bold text-blue-600 bg-blue-50 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full border border-blue-100">
-              TAKE THE FIRST STEP
-            </span>
-            <h2 className="text-xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight leading-snug sm:leading-tight font-display">
-              Your Career Doesn't Start With Your First Job. <br />
-              <span className="text-blue-600">It Starts With Your First Step.</span>
-            </h2>
-
-            <p className="text-xs sm:text-base text-slate-600 leading-relaxed max-w-lg font-normal">
-              Build your profile. Showcase your skills. Get discovered.
-            </p>
-
-            {/* Mobile Bento Highlights Grid */}
-            <div className="grid grid-cols-3 gap-1.5 sm:hidden py-1">
-              <div className="bg-white/80 border border-blue-100/90 rounded-lg p-2 text-center shadow-2xs">
-                <div className="text-[10.5px] font-extrabold text-blue-700">100% Free</div>
-                <div className="text-[8.5px] text-slate-500 mt-0.5">For Students</div>
-              </div>
-              <div className="bg-white/80 border border-blue-100/90 rounded-lg p-2 text-center shadow-2xs">
-                <div className="text-[10.5px] font-extrabold text-indigo-700">ATS Ready</div>
-                <div className="text-[8.5px] text-slate-500 mt-0.5">Instant Export</div>
-              </div>
-              <div className="bg-white/80 border border-blue-100/90 rounded-lg p-2 text-center shadow-2xs">
-                <div className="text-[10.5px] font-extrabold text-emerald-700">Verified</div>
-                <div className="text-[8.5px] text-slate-500 mt-0.5">Opportunities</div>
-              </div>
+          {/* Left: 3D Student Character with "Your Future Starts Here" annotation */}
+          <div className="lg:col-span-5 relative flex items-center justify-center">
+            
+            {/* Hand-drawn Annotation: "Your Future Starts Here" with curved arrow */}
+            <div className="hidden sm:flex flex-col items-center absolute -top-4 right-2 sm:right-6 z-20 pointer-events-none select-none">
+              <span className="text-blue-600 font-serif italic font-bold text-xs sm:text-sm transform rotate-6 whitespace-nowrap">
+                Your Future <br />
+                Starts Here
+              </span>
+              <svg width="48" height="36" viewBox="0 0 48 36" fill="none" className="text-blue-500 transform -rotate-12 translate-x-2">
+                <path 
+                  d="M10 4 C 24 10, 36 20, 20 28" 
+                  stroke="currentColor" 
+                  strokeWidth="2" 
+                  strokeLinecap="round" 
+                  fill="none" 
+                  strokeDasharray="2 3"
+                />
+                <path 
+                  d="M16 22 L 20 28 L 26 24" 
+                  stroke="currentColor" 
+                  strokeWidth="2" 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                />
+              </svg>
             </div>
 
-            <div className="pt-1 sm:pt-2">
-              <button
-                onClick={() => onOpenAuth('register')}
-                className="inline-flex items-center justify-center gap-1.5 sm:gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm px-4 sm:px-6 py-2.5 sm:py-3.5 rounded-xl shadow-md shadow-blue-500/20 transition-all cursor-pointer group w-full sm:w-auto"
-              >
-                <span>Start Building Your Career</span>
-                <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform" />
-              </button>
-            </div>
-          </div>
-
-          {/* Right Column: Students Character Graphic (Hidden on mobile, visible on sm and desktop) */}
-          <div className="hidden sm:flex lg:col-span-5 justify-center lg:justify-end mt-1 sm:mt-0">
-            <div className="w-full max-w-md flex items-center justify-center">
+            <div className="relative w-full max-w-[260px] sm:max-w-[300px]">
               <img
-                src={jobForAllImg}
-                alt="Students building their careers"
-                className="w-full h-auto object-contain max-h-36 sm:max-h-64 drop-shadow-md select-none"
+                src={heroStudentImg}
+                alt="Your Future Starts Here"
+                className="w-full h-auto object-contain select-none drop-shadow-sm"
               />
             </div>
           </div>
 
+          {/* Right/Center Content */}
+          <div className="lg:col-span-7 space-y-4 text-center lg:text-left">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight font-display">
+              Ready to Build Your Professional Identity?
+            </h2>
+            <p className="text-xs sm:text-base text-slate-600 font-normal leading-relaxed max-w-lg mx-auto lg:mx-0">
+              Create your profile, build your resume, showcase your work and get discovered by employers.
+            </p>
+
+            <div className="pt-2 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3">
+              <Link
+                to="/resume-builder"
+                className="inline-flex items-center justify-center gap-2 bg-[#1565ED] hover:bg-[#0E56D6] text-white font-bold text-xs sm:text-sm px-6 py-3 rounded-lg shadow-md shadow-blue-500/20 hover:shadow-lg transition-all group"
+              >
+                <span>Create My Profile</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+              </Link>
+            </div>
+
+            <p className="text-[11px] sm:text-xs text-slate-500 font-medium pt-1">
+              Free to create • Built for students, freshers and professionals
+            </p>
+          </div>
+
         </div>
+
       </div>
     </section>
   );

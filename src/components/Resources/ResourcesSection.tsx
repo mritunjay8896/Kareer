@@ -79,9 +79,9 @@ export const ResourcesSection: React.FC = () => {
     },
     {
       id: 'res-6',
-      title: 'Fresher Campus Placement Playbook',
-      description: 'Complete guide for 2025/2026 batch students to crack off-campus hiring drives and secure high-paying PPOs.',
-      category: 'Campus Guide',
+      title: 'Fresher Placement & Interview Playbook',
+      description: 'Complete guide for 2025/2026 batch students to crack technical hiring drives and secure high-paying PPOs.',
+      category: 'Fresher Guide',
       icon: 'CheckSquare',
       readTime: '7 min read',
       bgGradient: 'from-blue-700 to-cyan-800',

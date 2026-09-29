@@ -9,7 +9,7 @@ import {
 import officeChairImg from '../../assets/images/office_chair_hiring_1788460006422.jpg';
 
 export const LatestAndHiringSection: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'Jobs' | 'Internships' | 'Challenges'>('Jobs');
+  const [activeTab, setActiveTab] = useState<'All Jobs' | 'Fresher Roles'>('All Jobs');
   const navigate = useNavigate();
 
   return (
@@ -27,7 +27,7 @@ export const LatestAndHiringSection: React.FC = () => {
                 </h3>
                 {/* Pill filters right next to title */}
                 <div className="flex items-center gap-1 bg-slate-50/75 p-0.5 sm:p-1 rounded-full border border-slate-100">
-                  {(['Jobs', 'Internships', 'Challenges'] as const).map((tab) => (
+                  {(['All Jobs', 'Fresher Roles'] as const).map((tab) => (
                     <button
                       key={tab}
                       onClick={() => setActiveTab(tab)}
@@ -44,7 +44,7 @@ export const LatestAndHiringSection: React.FC = () => {
               </div>
 
               <Link
-                to={activeTab === 'Jobs' ? '/jobs' : activeTab === 'Internships' ? '/internships' : '/challenges'}
+                to={activeTab === 'Fresher Roles' ? '/jobs?experience=Fresher' : '/jobs'}
                 className="inline-flex items-center gap-1 text-[11px] sm:text-xs font-semibold text-blue-600 hover:text-blue-700 transition-colors group cursor-pointer ml-auto sm:ml-0"
               >
                 <span>View All</span>

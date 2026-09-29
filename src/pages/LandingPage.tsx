@@ -1,13 +1,11 @@
 import React from 'react';
 import { FigmaHero } from '../components/Home/FigmaHero';
-import { FindOpportunitySection } from '../components/Home/FindOpportunitySection';
-import { NoExperienceSection } from '../components/Home/NoExperienceSection';
-import { ThreePillarsSection } from '../components/Home/ThreePillarsSection';
-import { AtsResumeSection } from '../components/Home/AtsResumeSection';
-import { FirstJobSearchSection } from '../components/Home/FirstJobSearchSection';
-import { RecruiterProfileSection } from '../components/Home/RecruiterProfileSection';
-import { GovtOpportunitiesSection } from '../components/Home/GovtOpportunitiesSection';
-import { LatestAndHiringSection } from '../components/Home/LatestAndHiringSection';
+import { ValuePropositionStrip } from '../components/Home/ValuePropositionStrip';
+import { HowItWorksSection } from '../components/Home/HowItWorksSection';
+import { DualShowcaseSection } from '../components/Home/DualShowcaseSection';
+import { OneLinkProfileSection } from '../components/Home/OneLinkProfileSection';
+import { EmployerDiscoverySection } from '../components/Home/EmployerDiscoverySection';
+import { CareerStageSection } from '../components/Home/CareerStageSection';
 import { FinalCtaBanner } from '../components/Home/FinalCtaBanner';
 import { JobItem, CareerSwitchPath } from '../types';
 
@@ -27,34 +25,28 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 }) => {
   return (
     <div className="w-full bg-white flex flex-col min-h-screen">
-      {/* 1. Hero Section */}
+      {/* 1. Hero Banner: Build Your Professional Identity */}
       <FigmaHero onOpenAuth={onOpenAuth} />
 
-      {/* 2. Find Your Next Opportunity (includes Journey steps right below description) */}
-      <FindOpportunitySection />
+      {/* 2. Value Proposition Strip: One Profile. Multiple Possibilities. */}
+      <ValuePropositionStrip />
 
-      {/* 4. No Experience? Start Here. */}
-      <NoExperienceSection />
+      {/* 3. How Glitread Works (4 Steps with Connecting Arrows) */}
+      <HowItWorksSection />
 
-      {/* 5. Three Pillars: Challenges, Internships, Portfolio */}
-      <ThreePillarsSection />
+      {/* 4. Dual Showcase: Build a Resume That Gets Read & Your Career Deserves More Than a PDF */}
+      <DualShowcaseSection />
 
-      {/* 6. Turn Your Student Journey Into a Resume */}
-      <AtsResumeSection />
+      {/* 5. One Link. Your Entire Professional Profile. */}
+      <OneLinkProfileSection />
 
-      {/* 7. When You're Ready, Find Your First Job */}
-      <FirstJobSearchSection />
+      {/* 6. Let Employers Discover You. */}
+      <EmployerDiscoverySection />
 
-      {/* 8. Built for Students. Loved by Recruiters. */}
-      <RecruiterProfileSection />
+      {/* 7. Built For Your Career Stage (Student, Fresher, Working Prof, Experienced Prof) */}
+      <CareerStageSection />
 
-      {/* 9. Government Opportunities */}
-      <GovtOpportunitiesSection />
-
-      {/* 10. Latest Opportunities & Are You Hiring? */}
-      <LatestAndHiringSection />
-
-      {/* 11. Final Call To Action Banner */}
+      {/* 8. Final CTA Banner: Ready to Build Your Professional Identity? */}
       <FinalCtaBanner onOpenAuth={onOpenAuth} />
     </div>
   );

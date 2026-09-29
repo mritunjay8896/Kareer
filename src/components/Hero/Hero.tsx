@@ -55,7 +55,7 @@ export const Hero: React.FC<HeroProps> = ({ onExploreClick }) => {
 
             {/* Subheading */}
             <p className="text-base sm:text-lg text-slate-600 max-w-xl leading-relaxed font-normal">
-              Find verified Jobs, Internships, Challenges & Hackathons, Govt Notices, AI Resume Builder, and Portfolios in one seamless platform.
+              Find verified Jobs, Internships, Govt Notices, AI Resume Builder, and Portfolios in one seamless platform.
             </p>
 
             {/* Job Filter Bar */}
@@ -87,13 +87,6 @@ export const Hero: React.FC<HeroProps> = ({ onExploreClick }) => {
               {/* Quick Filter Chips */}
               <div className="flex items-center gap-1.5 pt-2 border-t border-slate-100/80 overflow-x-auto text-[11px] no-scrollbar">
                 <span className="text-slate-400 font-medium shrink-0">Popular:</span>
-                <button
-                  onClick={() => navigate('/challenges')}
-                  className="px-2.5 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200/80 font-bold transition-colors shrink-0 whitespace-nowrap cursor-pointer flex items-center gap-1"
-                >
-                  <span>🏆 Challenges</span>
-                  <span className="px-1 py-0.2 bg-amber-500 text-white text-[8px] font-black rounded-sm uppercase">New</span>
-                </button>
                 {[
                   'Remote', 
                   'Full Time', 

@@ -25,10 +25,9 @@ export const NotFoundPage: React.FC = () => {
 
   const popularLinks = [
     { label: 'Explore All Jobs', path: '/jobs' },
-    { label: 'BPO & Customer Care', path: '/jobs?category=BPO' },
-    { label: 'Internships', path: '/internships' },
-    { label: 'Government Notices', path: '/government-jobs' },
-    { label: 'Gulf & Saudi Jobs', path: '/gulf-jobs' },
+    { label: 'Fresher Opportunities', path: '/jobs?experience=Fresher' },
+    { label: 'Portfolio Builder', path: '/portfolio' },
+    { label: 'Mock Tests & Prep', path: '/mock-tests' },
     { label: 'AI Resume Builder', path: '/resume-builder' },
   ];
 

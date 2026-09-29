@@ -1,23 +1,23 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
-import trophyImg from '../../assets/images/trophy_hackathon_3d_1788540171132.jpg';
+import governmentDomeImg from '../../assets/images/government_dome_3d_1788699260897.jpg';
 import backpackImg from '../../assets/images/backpack_illustration_1788459993181.jpg';
 import portfolioImg from '../../assets/images/portfolio_mockup_3d_1788540187292.jpg';
 
 export const ThreePillarsSection: React.FC = () => {
   const cards = [
     {
-      badge: 'CHALLENGES',
-      badgeColor: 'text-amber-700 bg-amber-50 border-amber-200/70',
-      titleLine1: "Don't Just Say You Have Skills.",
-      titleLine2: 'Prove Them.',
-      desc: 'Take part in challenges and hackathons. Earn certificates and get noticed.',
-      btnText: 'Explore Challenges',
-      mobileBtnText: 'Challenges',
-      link: '/challenges',
-      image: trophyImg,
-      alt: 'Challenges and Hackathons with Trophy',
+      badge: 'GOVT JOBS',
+      badgeColor: 'text-teal-700 bg-teal-50 border-teal-200/70',
+      titleLine1: 'Explore Verified Government',
+      titleLine2: 'Notifications & Exams.',
+      desc: 'Central and state government hiring notices, eligibility criteria, and syllabus.',
+      btnText: 'Explore Govt Jobs',
+      mobileBtnText: 'Govt Jobs',
+      link: '/government-jobs',
+      image: governmentDomeImg,
+      alt: 'Government Jobs and Notifications',
     },
     {
       badge: 'INTERNSHIPS',

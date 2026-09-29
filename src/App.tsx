@@ -24,14 +24,8 @@ import { ProfilePage } from './pages/ProfilePage';
 import { CandidateLoginPage } from './pages/CandidateLoginPage';
 import { CandidateRegisterPage } from './pages/CandidateRegisterPage';
 import { NotFoundPage } from './pages/NotFoundPage';
-import { AtsResumeBuilderPage } from './pages/candidate/AtsResumeBuilderPage';
+import { ResumeBuilderPage } from './pages/candidate/ResumeBuilderPage';
 import { ShareablePortfolioBuilderPage } from './pages/candidate/ShareablePortfolioBuilderPage';
-import { ChallengesPage } from './pages/ChallengesPage';
-import { ChallengeDetailPage } from './pages/ChallengeDetailPage';
-
-// Government Jobs Pages
-import { GovJobsPublicListPage } from './pages/GovJobsPublicListPage';
-import { GovJobDetailPage } from './pages/GovJobDetailPage';
 
 // Admin CMS Pages
 import { AdminLoginPage } from './pages/admin/AdminLoginPage';
@@ -102,6 +96,7 @@ function MainAppContent() {
 
   const isEmployerRoute = location.pathname.startsWith('/employer') || location.pathname.startsWith('/employers');
   const isAdminRoute = location.pathname.startsWith('/admin');
+  const isResumeBuilderRoute = location.pathname.startsWith('/resume-builder') || location.pathname.startsWith('/tools/ats-resume-builder');
 
   // Helper to trigger toast messages
   const addToast = (type: 'success' | 'error' | 'info', title: string, description?: string) => {
@@ -269,8 +264,8 @@ function MainAppContent() {
       {/* Universal Navbar for Candidate & Employer experience */}
       {!isAdminRoute && <Navbar />}
 
-      {/* Slim Vertical Left Menu Rail for Candidate Pages */}
-      {!isEmployerRoute && !isAdminRoute && (
+      {/* Slim Vertical Left Menu Rail for Candidate Pages (Hidden on resume builder for focused workspace) */}
+      {!isEmployerRoute && !isAdminRoute && !isResumeBuilderRoute && (
         <LeftSidebarRail
           currentUser={userName}
           userRole={userRole}
@@ -281,11 +276,11 @@ function MainAppContent() {
       )}
 
       {/* Main Container */}
-      <main className={`flex-1 ${!isAdminRoute ? 'pt-[64px]' : ''} ${!isEmployerRoute && !isAdminRoute ? 'pl-12 sm:pl-14 md:pl-16 lg:pl-[72px]' : ''}`}>
+      <main className={`flex-1 ${!isAdminRoute ? 'pt-[64px]' : ''} ${!isEmployerRoute && !isAdminRoute && !isResumeBuilderRoute ? 'pl-12 sm:pl-14 md:pl-16 lg:pl-[72px]' : ''}`}>
         <Routes>
-          {/* GOVERNMENT JOBS PUBLIC ROUTES */}
-          <Route path="/government-jobs" element={<GovJobsPublicListPage />} />
-          <Route path="/government-jobs/:slug" element={<GovJobDetailPage />} />
+          {/* REDIRECT REMOVED GOVERNMENT JOBS & INTERNSHIPS */}
+          <Route path="/government-jobs" element={<Navigate to="/jobs" replace />} />
+          <Route path="/government-jobs/:slug" element={<Navigate to="/jobs" replace />} />
 
           {/* ADMIN CMS ROUTES */}
           <Route path="/admin/login" element={<AdminLoginPage />} />
@@ -318,18 +313,18 @@ function MainAppContent() {
             }
           />
           <Route path="/jobs" element={<JobsPage jobsList={jobs} onApplyJob={handleApplyJob} onBookmarkJob={handleBookmarkJob} bookmarkedJobIds={bookmarkedJobIds} />} />
-          <Route path="/internships" element={<JobsPage jobsList={jobs} onApplyJob={handleApplyJob} onBookmarkJob={handleBookmarkJob} bookmarkedJobIds={bookmarkedJobIds} />} />
+          <Route path="/internships" element={<Navigate to="/jobs" replace />} />
           <Route path="/gulf-jobs" element={<Navigate to="/jobs" replace />} />
           <Route path="/mock-tests" element={<JobsPage jobsList={jobs} onApplyJob={handleApplyJob} onBookmarkJob={handleBookmarkJob} bookmarkedJobIds={bookmarkedJobIds} />} />
           <Route path="/job/:slug" element={<JobDetailPage jobsList={jobs} onApplyJob={handleApplyJob} onBookmarkJob={handleBookmarkJob} bookmarkedJobIds={bookmarkedJobIds} />} />
           <Route path="/company/:slug" element={<CompanyProfilePage onApplyJob={handleApplyJob} onBookmarkJob={handleBookmarkJob} bookmarkedJobIds={bookmarkedJobIds} />} />
 
-          {/* CHALLENGES & COMPETITIONS ROUTES */}
-          <Route path="/challenges" element={<ChallengesPage />} />
-          <Route path="/challenges/:challengeId" element={<ChallengeDetailPage />} />
-          <Route path="/challenge/:slug" element={<ChallengeDetailPage />} />
-          <Route path="/competitions" element={<Navigate to="/challenges" replace />} />
-          <Route path="/hackathons" element={<Navigate to="/challenges" replace />} />
+          {/* Redirect deprecated challenges routes */}
+          <Route path="/challenges" element={<Navigate to="/jobs" replace />} />
+          <Route path="/challenges/:challengeId" element={<Navigate to="/jobs" replace />} />
+          <Route path="/challenge/:slug" element={<Navigate to="/jobs" replace />} />
+          <Route path="/competitions" element={<Navigate to="/jobs" replace />} />
+          <Route path="/hackathons" element={<Navigate to="/jobs" replace />} />
 
           {/* Candidate Auth */}
           <Route path="/login" element={<CandidateLoginPage />} />
@@ -340,8 +335,9 @@ function MainAppContent() {
           <Route path="/candidate/profile" element={<CandidateRoute><CandidateProfilePage /></CandidateRoute>} />
           <Route path="/candidate/applications" element={<CandidateRoute><AppliedJobsPage applicationsList={applications} onWithdrawApp={handleWithdrawApplication} /></CandidateRoute>} />
           <Route path="/candidate/saved-jobs" element={<CandidateRoute><SavedJobsPage jobsList={jobs} onApplyJob={handleApplyJob} onBookmarkJob={handleBookmarkJob} bookmarkedJobIds={bookmarkedJobIds} /></CandidateRoute>} />
-          <Route path="/resume-builder" element={<AtsResumeBuilderPage />} />
-          <Route path="/tools/ats-resume-builder" element={<AtsResumeBuilderPage />} />
+          <Route path="/resume-builder" element={<ResumeBuilderPage />} />
+          <Route path="/resume-builder/:resumeId" element={<ResumeBuilderPage />} />
+          <Route path="/tools/ats-resume-builder" element={<ResumeBuilderPage />} />
           <Route path="/portfolio" element={<ShareablePortfolioBuilderPage />} />
           <Route path="/portfolio-builder" element={<ShareablePortfolioBuilderPage />} />
           <Route path="/tools/portfolio-builder" element={<ShareablePortfolioBuilderPage />} />

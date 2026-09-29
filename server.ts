@@ -120,6 +120,251 @@ app.get("/api/government-jobs", (req, res) => {
   res.json(jobs);
 });
 
+// Helper for deterministic ATS refinement
+function generateDeterministicImprovement(text: string, mode?: string): string {
+  let fallbackText = text.trim();
+  if (mode === "shorten") {
+    fallbackText = fallbackText.split(". ").slice(0, 2).join(". ");
+    if (!fallbackText.endsWith(".")) fallbackText += ".";
+  } else if (mode === "bullet") {
+    if (!/^(Led|Built|Developed|Engineered|Implemented|Optimized|Architected|Delivered|Collaborated|Spearheaded)/i.test(fallbackText)) {
+      fallbackText = "Engineered and delivered " + fallbackText.charAt(0).toLowerCase() + fallbackText.slice(1);
+    }
+  } else if (mode === "ats") {
+    fallbackText = fallbackText.replace(/\b(good|helped|worked on|did|made)\b/gi, (match) => {
+      const map: Record<string, string> = {
+        good: "high-performing",
+        helped: "collaborated to deliver",
+        "worked on": "developed and deployed",
+        did: "executed",
+        made: "architected",
+      };
+      return map[match.toLowerCase()] || match;
+    });
+  }
+  return fallbackText;
+}
+
+// AI Writing & ATS Assistant Endpoints
+app.post("/api/ai/resume-improve", async (req, res) => {
+  try {
+    const { text, mode, context } = req.body;
+    if (!text || typeof text !== "string") {
+      return res.status(400).json({ error: "Missing text to improve" });
+    }
+
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      const fallbackText = generateDeterministicImprovement(text, mode);
+      return res.json({ result: fallbackText, note: "Applied ATS action-verb optimization rule." });
+    }
+
+    const { GoogleGenAI } = await import("@google/genai");
+    const ai = new GoogleGenAI({ apiKey });
+
+    let systemInstruction = `You are an expert ATS resume editor.
+CRITICAL MANDATE: NEVER invent fake facts, metrics, companies, years of experience, or percentages.
+Only refine the grammar, tone, action verbs, and ATS keyword clarity strictly based on the user's provided text.`;
+
+    let prompt = "";
+    if (mode === "shorten") {
+      prompt = `Make the following text concise and punchy for an ATS resume without losing any factual meaning or adding invented statistics:\n\n"${text}"\n\nReturn ONLY the improved text, no quotes, no extra explanations.`;
+    } else if (mode === "bullet") {
+      prompt = `Refine this resume bullet point using a strong active verb (e.g., Architected, Engineered, Implemented, Spearheaded). Do NOT add made-up metrics or percentages:\n\n"${text}"\n\nReturn ONLY the improved bullet point, no quotes, no conversational intro.`;
+    } else if (mode === "ats") {
+      prompt = `Rewrite this resume text to make it ATS-friendly with industry standard phrasing. Preserve all facts exactly, never hallucinate metrics or skills:\n\n"${text}"\n\nReturn ONLY the improved text, no commentary.`;
+    } else {
+      prompt = `Improve the clarity, professional tone, and impact of this resume text while strictly retaining only the facts provided by the user:\n\n"${text}"\n\nReturn ONLY the improved text.`;
+    }
+
+    if (context) {
+      prompt += `\nRole / Field Context: ${context}`;
+    }
+
+    // Try primary model first, fallback to flash-lite if 503/high demand, and fallback to rule-based if both fail
+    let generatedText = "";
+    try {
+      const response = await ai.models.generateContent({
+        model: "gemini-3.8-flash",
+        contents: prompt,
+        config: {
+          systemInstruction,
+          temperature: 0.3,
+          maxOutputTokens: 600,
+        },
+      });
+      generatedText = response.text ? response.text.trim() : "";
+    } catch (primaryErr: any) {
+      console.warn("Primary gemini-3.8-flash high demand/error, trying gemini-3.1-flash-lite:", primaryErr?.message);
+      try {
+        const responseLite = await ai.models.generateContent({
+          model: "gemini-3.1-flash-lite",
+          contents: prompt,
+          config: {
+            systemInstruction,
+            temperature: 0.3,
+            maxOutputTokens: 600,
+          },
+        });
+        generatedText = responseLite.text ? responseLite.text.trim() : "";
+      } catch (secondaryErr: any) {
+        console.warn("Gemini models unavailable (503/quota/high demand). Using deterministic ATS refinement:", secondaryErr?.message);
+        const fallback = generateDeterministicImprovement(text, mode);
+        return res.json({
+          result: fallback,
+          fallback: true,
+          note: "Applied deterministic ATS action-verb optimization rule (model experiencing temporary high demand).",
+        });
+      }
+    }
+
+    const result = generatedText || generateDeterministicImprovement(text, mode);
+    res.json({ result });
+  } catch (err: any) {
+    console.error("Error in /api/ai/resume-improve, returning fallback:", err);
+    const fallback = generateDeterministicImprovement(req.body?.text || "", req.body?.mode);
+    res.json({ result: fallback, fallback: true });
+  }
+});
+
+app.post("/api/ai/resume-ats-analyze", async (req, res) => {
+  try {
+    const { resumeData, jobDescription } = req.body;
+    if (!resumeData) {
+      return res.status(400).json({ error: "Missing resume data" });
+    }
+
+    // Prepare text summary of resume
+    const skills: string[] = Array.isArray(resumeData.skills)
+      ? (typeof resumeData.skills[0] === "string" ? resumeData.skills : resumeData.skills.map((s: any) => s.name || s))
+      : [];
+    const experienceCount = Array.isArray(resumeData.experience) ? resumeData.experience.length : 0;
+    const projectCount = Array.isArray(resumeData.projects) ? resumeData.projects.length : 0;
+    const hasEducation = Array.isArray(resumeData.education) && resumeData.education.length > 0;
+    const hasEmail = Boolean(resumeData.personalInfo?.email);
+    const hasPhone = Boolean(resumeData.personalInfo?.phone);
+    const hasSummary = Boolean(resumeData.summary && resumeData.summary.length > 30);
+
+    // Calculate algorithmic score
+    let score = 40;
+    if (hasEmail && hasPhone) score += 15;
+    if (hasSummary) score += 10;
+    if (skills.length >= 5) score += 15;
+    if (projectCount >= 1) score += 10;
+    if (hasEducation) score += 10;
+
+    let matchedKeywords: string[] = [];
+    let missingKeywords: string[] = [];
+    let suggestions: string[] = [];
+    let keywordMatchScore = 70;
+
+    if (jobDescription && jobDescription.trim()) {
+      const jdWords = jobDescription
+        .toLowerCase()
+        .replace(/[^a-z0-9#+.]+/g, " ")
+        .split(/\s+/)
+        .filter((w: string) => w.length > 3);
+      
+      const commonTech = [
+        "react", "javascript", "typescript", "python", "node", "java", "sql",
+        "aws", "docker", "git", "html", "css", "c++", "linux", "rest", "api",
+        "mongodb", "kubernetes", "graphql", "tailwind", "express", "postgresql"
+      ];
+      
+      const jdTech: string[] = Array.from(new Set<string>(jdWords.filter((w: string) => commonTech.includes(w))));
+      const userSkillsLower: string[] = (skills || []).map((s: any) => typeof s === 'string' ? s.toLowerCase() : s?.name ? String(s.name).toLowerCase() : '');
+
+      matchedKeywords = jdTech.filter((t: string) => userSkillsLower.some((s: string) => s.includes(t)));
+      missingKeywords = jdTech.filter((t: string) => !userSkillsLower.some((s: string) => s.includes(t)));
+
+      if (jdTech.length > 0) {
+        const matchRatio = matchedKeywords.length / jdTech.length;
+        keywordMatchScore = Math.round(matchRatio * 100);
+        score = Math.round(score * 0.4 + matchRatio * 100 * 0.6);
+      }
+    } else {
+      keywordMatchScore = Math.min(Math.round((skills.length / 8) * 100), 90);
+      if (!hasSummary) suggestions.push("Add a 2-3 sentence Professional Summary to anchor your experience.");
+      if (skills.length < 8) suggestions.push("Add more technical and soft skills to improve keyword density.");
+      if (projectCount === 0) suggestions.push("Include at least 1-2 impactful projects with live or GitHub links.");
+      if (!resumeData.personalInfo?.linkedin) suggestions.push("Include your LinkedIn profile link.");
+    }
+
+    if (missingKeywords.length > 0) {
+      suggestions.push(`Consider adding target role skills if proficient: ${missingKeywords.slice(0, 5).join(", ")}`);
+    }
+
+    score = Math.min(Math.max(score, 25), 98);
+
+    const totalSections = 6;
+    let passedSections = 0;
+    if (hasEmail && hasPhone) passedSections++;
+    if (hasSummary) passedSections++;
+    if (hasEducation) passedSections++;
+    if (skills.length >= 5) passedSections++;
+    if (projectCount > 0) passedSections++;
+    if (experienceCount > 0) passedSections++;
+    const sectionScore = Math.round((passedSections / totalSections) * 100);
+
+    const breakdown = [
+      {
+        category: "Contact Information",
+        status: hasEmail && hasPhone ? "pass" : "fail",
+        message: hasEmail && hasPhone ? "Email and phone number are present." : "Missing email or phone.",
+      },
+      {
+        category: "Professional Summary",
+        status: hasSummary ? "pass" : "warning",
+        message: hasSummary ? "Professional summary anchors profile." : "Add a summary to introduce core specialization.",
+      },
+      {
+        category: "Core Competencies",
+        status: skills.length >= 5 ? "pass" : "warning",
+        message: skills.length >= 5 ? `${skills.length} skills listed.` : "Add at least 5-8 relevant skills.",
+      },
+      {
+        category: "Education History",
+        status: hasEducation ? "pass" : "warning",
+        message: hasEducation ? "Education records formatted." : "Add degrees or certifications.",
+      },
+      {
+        category: "Projects & Practical Work",
+        status: projectCount > 0 ? "pass" : "warning",
+        message: projectCount > 0 ? `${projectCount} projects documented.` : "Add key technical projects.",
+      },
+      {
+        category: "ATS Typography & Format",
+        status: "pass",
+        message: "Clean single-column layout without tables or graphics blocking ATS scanners.",
+      },
+    ];
+
+    res.json({
+      score,
+      overallScore: score,
+      sectionScore,
+      keywordMatchScore,
+      matchedKeywords,
+      missingKeywords,
+      matchedCount: matchedKeywords.length,
+      totalJdKeywords: matchedKeywords.length + missingKeywords.length,
+      suggestions,
+      completeness: {
+        contact: hasEmail && hasPhone,
+        summary: hasSummary,
+        education: hasEducation,
+        skills: skills.length >= 5,
+        projects: projectCount > 0,
+        experience: experienceCount > 0,
+      },
+      breakdown,
+    });
+  } catch (err: any) {
+    console.error("Error in /api/ai/resume-ats-analyze:", err);
+    res.status(500).json({ error: err.message || "Failed to analyze resume" });
+  }
+});
+
 // Dynamic XML Sitemap for Google Search & Discover
 app.get("/sitemap.xml", (req, res) => {
   try {

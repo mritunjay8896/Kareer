@@ -56,13 +56,9 @@ export const CandidateLoginPage: React.FC = () => {
               <AlertCircle className="w-4 h-4 shrink-0 text-rose-500 mt-0.5" />
               <div>
                 <span>{error}</span>
-                {error.includes('Employer') && (
-                  <div className="mt-2">
-                    <Link to="/employers/login" className="underline font-bold text-slate-900 hover:text-blue-600">
-                      Go to Employer Portal Sign In →
-                    </Link>
-                  </div>
-                )}
+                <div className="mt-1">
+                  <Link to="/register" className="font-bold underline">Don't have an account yet? Register here</Link>
+                </div>
               </div>
             </div>
           )}
@@ -112,9 +108,9 @@ export const CandidateLoginPage: React.FC = () => {
             <p>New to Glitread? <Link to="/register" className="font-extrabold text-blue-600 hover:underline">Register Free Account</Link></p>
             
             <div className="p-3 bg-amber-50/80 rounded-2xl border border-amber-200 text-left text-[11px] text-amber-900 mt-2 flex items-center justify-between">
-              <span>Are you hiring talent?</span>
-              <Link to="/employers/login" className="font-black text-amber-900 hover:underline flex items-center gap-1">
-                <Building2 className="w-3.5 h-3.5" /> Employer Portal →
+              <span>Hiring for your company?</span>
+              <Link to="/employer/login" className="font-bold underline text-amber-900 hover:text-amber-950 flex items-center gap-1">
+                <Building2 className="w-3.5 h-3.5" /> Employer Portal
               </Link>
             </div>
           </div>

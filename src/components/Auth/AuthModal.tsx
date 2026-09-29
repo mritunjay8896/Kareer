@@ -412,7 +412,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                           >
                             <option value="1 - 10 Immediate Vacancies">1 - 10 Vacancies</option>
                             <option value="10 - 50 Hires">10 - 50 Hires</option>
-                            <option value="Bulk Campus / Freshers Drive">Bulk / Campus Hiring</option>
+                            <option value="Bulk Fresher Hiring Drives">Bulk / Fresher Hiring</option>
                           </select>
                         </div>
                       </div>
