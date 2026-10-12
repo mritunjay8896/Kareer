@@ -6,13 +6,17 @@ import {
   Search,
   Sparkles,
   ChevronRight,
-  ChevronLeft
+  ChevronLeft,
+  Lock,
+  LogIn,
+  UserPlus
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { MOCK_JOBS } from '../../data/mockData';
 import { JobItem } from '../../types';
 import { JobCard } from '../Job/JobCard';
 import { JobDetailModal } from './JobDetailModal';
+import { useAuth } from '../../context/AuthContext';
 
 interface OpportunitySectionProps {
   onApplyJob: (job: JobItem) => void;
@@ -25,6 +29,7 @@ export const OpportunitySection: React.FC<OpportunitySectionProps> = ({
   onBookmarkJob,
   bookmarkedJobIds
 }) => {
+  const { currentUser } = useAuth();
   const [activeTab, setActiveTab] = useState<string>('Recommended');
   const [selectedJob, setSelectedJob] = useState<JobItem | null>(null);
   const [filterQuery, setFilterQuery] = useState('');
@@ -144,17 +149,70 @@ export const OpportunitySection: React.FC<OpportunitySectionProps> = ({
           </button>
         </div>
 
-        {/* Jobs Grid */}
-        {filteredJobs.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {/* Unauthenticated Member Lock OR Authenticated Jobs Masonry Grid */}
+        {!currentUser ? (
+          <div className="relative rounded-3xl overflow-hidden border border-slate-200/90 bg-gradient-to-b from-slate-50/60 to-white p-6 sm:p-10 text-center shadow-xs">
+            {/* Blurred background preview of job cards */}
+            <div className="absolute inset-0 filter blur-md opacity-30 pointer-events-none select-none overflow-hidden p-4">
+              <div className="columns-1 sm:columns-3 gap-4 space-y-4">
+                {filteredJobs.slice(0, 6).map((job) => (
+                  <div key={job.id} className="break-inside-avoid">
+                    <JobCard job={job} onApply={() => {}} />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Foreground Lock & CTA Content */}
+            <div className="relative z-10 max-w-lg mx-auto flex flex-col items-center">
+              <div className="w-14 h-14 rounded-2xl bg-blue-600/10 border border-blue-200 text-blue-600 flex items-center justify-center mb-4 shadow-xs">
+                <Lock className="w-7 h-7 stroke-[2.2]" />
+              </div>
+
+              <span className="text-[11px] font-extrabold uppercase tracking-widest text-blue-600 bg-blue-50 border border-blue-200/80 px-3 py-1 rounded-full mb-2">
+                Member Protected Opportunities
+              </span>
+
+              <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight font-display mb-2">
+                Log In to Unlock 15,000+ Jobs & Internships
+              </h3>
+
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-6">
+                Active job vacancies, salary insights, recruiter contact details, and 1-click applications are reserved for authenticated Glitread members.
+              </p>
+
+              <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+                <Link
+                  to="/login"
+                  state={{ from: { pathname: '/jobs' } }}
+                  className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm shadow-md shadow-blue-500/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <LogIn className="w-4 h-4" />
+                  <span>Log In to View Jobs</span>
+                </Link>
+
+                <Link
+                  to="/register"
+                  state={{ from: { pathname: '/jobs' } }}
+                  className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-white hover:bg-slate-50 text-slate-800 font-bold text-xs sm:text-sm border border-slate-200 shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <UserPlus className="w-4 h-4 text-blue-600" />
+                  <span>Register Free Account</span>
+                </Link>
+              </div>
+            </div>
+          </div>
+        ) : filteredJobs.length > 0 ? (
+          <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
             {filteredJobs.slice(0, 6).map((job) => (
-              <JobCard
-                key={job.id}
-                job={job}
-                onApply={(j) => setSelectedJob(j)}
-                isSaved={bookmarkedJobIds.includes(job.id)}
-                onToggleSave={(id) => onBookmarkJob(id)}
-              />
+              <div key={job.id} className="break-inside-avoid">
+                <JobCard
+                  job={job}
+                  onApply={(j) => setSelectedJob(j)}
+                  isSaved={bookmarkedJobIds.includes(job.id)}
+                  onToggleSave={(id) => onBookmarkJob(id)}
+                />
+              </div>
             ))}
           </div>
         ) : (
@@ -175,7 +233,8 @@ export const OpportunitySection: React.FC<OpportunitySectionProps> = ({
         {/* View All Button */}
         <div className="text-center pt-4">
           <Link
-            to="/jobs"
+            to={currentUser ? "/jobs" : "/login"}
+            state={{ from: { pathname: '/jobs' } }}
             className="inline-flex items-center gap-2 bg-white hover:bg-slate-100 text-slate-800 font-bold text-xs py-2.5 px-5 rounded-xl border border-slate-200 shadow-2xs transition-all hover:border-blue-300 hover:text-blue-600"
           >
             <span>Browse All {MOCK_JOBS.length}+ Opportunities</span>

@@ -44,18 +44,18 @@ export const EmployerLandingPage: React.FC = () => {
 
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
                 <Link
-                  to="/employers/register"
-                  className="px-8 py-4 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-sm rounded-2xl shadow-xl shadow-amber-400/20 transition-all flex items-center justify-center gap-2 active:scale-95"
+                  to="/search-profiles"
+                  className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-sm rounded-2xl shadow-xl shadow-blue-500/20 transition-all flex items-center justify-center gap-2 active:scale-95"
                 >
-                  <PlusCircle className="w-5 h-5 stroke-[2.5]" />
-                  <span>Post a Job</span>
+                  <Search className="w-5 h-5 stroke-[2.5]" />
+                  <span>Search Candidate Profiles (Direct)</span>
                 </Link>
 
                 <Link
-                  to="/employers/login"
+                  to="/portfolio"
                   className="px-8 py-4 bg-white hover:bg-slate-50 text-slate-800 font-bold text-sm rounded-2xl border border-slate-200 shadow-xs transition-all flex items-center justify-center gap-2"
                 >
-                  <span>Sign In to Hiring Hub</span>
+                  <span>Explore Candidate Portfolios</span>
                   <ChevronRight className="w-4 h-4" />
                 </Link>
               </div>

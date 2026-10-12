@@ -26,6 +26,14 @@ import { CandidateRegisterPage } from './pages/CandidateRegisterPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { ResumeBuilderPage } from './pages/candidate/ResumeBuilderPage';
 import { ShareablePortfolioBuilderPage } from './pages/candidate/ShareablePortfolioBuilderPage';
+import { PortfolioTemplatesMarketplacePage } from './pages/candidate/PortfolioTemplatesMarketplacePage';
+import { PortfolioBuilderEditorPage } from './pages/candidate/PortfolioBuilderEditorPage';
+import { CandidateSearchPage } from './pages/candidate/CandidateSearchPage';
+import { ChromeExtensionPage } from './pages/tools/ChromeExtensionPage';
+import { GovJobsPublicListPage } from './pages/GovJobsPublicListPage';
+import { GovJobDetailPage } from './pages/GovJobDetailPage';
+import { ChallengesPage } from './pages/ChallengesPage';
+import { ChallengeDetailPage } from './pages/ChallengeDetailPage';
 
 // Admin CMS Pages
 import { AdminLoginPage } from './pages/admin/AdminLoginPage';
@@ -264,23 +272,23 @@ function MainAppContent() {
       {/* Universal Navbar for Candidate & Employer experience */}
       {!isAdminRoute && <Navbar />}
 
-      {/* Slim Vertical Left Menu Rail for Candidate Pages (Hidden on resume builder for focused workspace) */}
-      {!isEmployerRoute && !isAdminRoute && !isResumeBuilderRoute && (
+      {/* Universal Left Sidebar Rail */}
+      {!isAdminRoute && !isEmployerRoute && (
         <LeftSidebarRail
           currentUser={userName}
           userRole={userRole}
-          onOpenEmployer={() => navigate('/employers/register')}
-          onSwitchRole={(role) => navigate(role === 'employer' ? '/employer/dashboard' : '/candidate/dashboard')}
+          onOpenEmployer={() => setEmployerModalOpen(true)}
+          onSwitchRole={() => {}}
           onNavClick={handleNavClick}
         />
       )}
 
       {/* Main Container */}
-      <main className={`flex-1 ${!isAdminRoute ? 'pt-[64px]' : ''} ${!isEmployerRoute && !isAdminRoute && !isResumeBuilderRoute ? 'pl-12 sm:pl-14 md:pl-16 lg:pl-[72px]' : ''}`}>
+      <main className={`flex-1 ${!isAdminRoute ? 'pt-[64px]' : ''} ${!isAdminRoute && !isEmployerRoute ? 'pl-12 sm:pl-14 md:pl-16 lg:pl-[72px]' : ''}`}>
         <Routes>
-          {/* REDIRECT REMOVED GOVERNMENT JOBS & INTERNSHIPS */}
-          <Route path="/government-jobs" element={<Navigate to="/jobs" replace />} />
-          <Route path="/government-jobs/:slug" element={<Navigate to="/jobs" replace />} />
+          {/* GOVERNMENT JOBS DIRECTORY & NOTIFICATIONS */}
+          <Route path="/government-jobs" element={<GovJobsPublicListPage />} />
+          <Route path="/government-jobs/:slug" element={<GovJobDetailPage />} />
 
           {/* ADMIN CMS ROUTES */}
           <Route path="/admin/login" element={<AdminLoginPage />} />
@@ -296,7 +304,7 @@ function MainAppContent() {
             <Route path="job/:id/edit" element={<AdminJobFormPage />} />
           </Route>
 
-          {/* CANDIDATE ROUTES */}
+          {/* LANDING PAGE AT ROOT / */}
           <Route
             path="/"
             element={
@@ -312,19 +320,46 @@ function MainAppContent() {
               />
             }
           />
-          <Route path="/jobs" element={<JobsPage jobsList={jobs} onApplyJob={handleApplyJob} onBookmarkJob={handleBookmarkJob} bookmarkedJobIds={bookmarkedJobIds} />} />
-          <Route path="/internships" element={<Navigate to="/jobs" replace />} />
-          <Route path="/gulf-jobs" element={<Navigate to="/jobs" replace />} />
+          <Route
+            path="/landing"
+            element={
+              <LandingPage
+                onOpenAuth={handleOpenAuth}
+                onApplyJob={handleApplyJob}
+                onBookmarkJob={handleBookmarkJob}
+                bookmarkedJobIds={bookmarkedJobIds}
+                onSelectTool={handleSelectTool}
+                onEmployerJobPublished={(title, company) => handlePostNewJob({ title, company })}
+                onExplorePath={handleExplorePath}
+                onSeoLinkClick={handleSeoLinkClick}
+              />
+            }
+          />
+
+          {/* CANDIDATE JOB BROWSE & SEARCH AT /jobs */}
+          <Route
+            path="/jobs"
+            element={
+              <JobsPage
+                jobsList={jobs}
+                onApplyJob={handleApplyJob}
+                onBookmarkJob={handleBookmarkJob}
+                bookmarkedJobIds={bookmarkedJobIds}
+              />
+            }
+          />
+          <Route path="/internships" element={<JobsPage jobsList={jobs} onApplyJob={handleApplyJob} onBookmarkJob={handleBookmarkJob} bookmarkedJobIds={bookmarkedJobIds} />} />
+          <Route path="/gulf-jobs" element={<JobsPage jobsList={jobs} onApplyJob={handleApplyJob} onBookmarkJob={handleBookmarkJob} bookmarkedJobIds={bookmarkedJobIds} />} />
           <Route path="/mock-tests" element={<JobsPage jobsList={jobs} onApplyJob={handleApplyJob} onBookmarkJob={handleBookmarkJob} bookmarkedJobIds={bookmarkedJobIds} />} />
           <Route path="/job/:slug" element={<JobDetailPage jobsList={jobs} onApplyJob={handleApplyJob} onBookmarkJob={handleBookmarkJob} bookmarkedJobIds={bookmarkedJobIds} />} />
           <Route path="/company/:slug" element={<CompanyProfilePage onApplyJob={handleApplyJob} onBookmarkJob={handleBookmarkJob} bookmarkedJobIds={bookmarkedJobIds} />} />
 
-          {/* Redirect deprecated challenges routes */}
-          <Route path="/challenges" element={<Navigate to="/jobs" replace />} />
-          <Route path="/challenges/:challengeId" element={<Navigate to="/jobs" replace />} />
-          <Route path="/challenge/:slug" element={<Navigate to="/jobs" replace />} />
-          <Route path="/competitions" element={<Navigate to="/jobs" replace />} />
-          <Route path="/hackathons" element={<Navigate to="/jobs" replace />} />
+          {/* CHALLENGES & COMPETITIONS */}
+          <Route path="/challenges" element={<ChallengesPage />} />
+          <Route path="/challenges/:challengeId" element={<ChallengeDetailPage />} />
+          <Route path="/challenge/:slug" element={<ChallengeDetailPage />} />
+          <Route path="/competitions" element={<ChallengesPage />} />
+          <Route path="/hackathons" element={<ChallengesPage />} />
 
           {/* Candidate Auth */}
           <Route path="/login" element={<CandidateLoginPage />} />
@@ -335,13 +370,33 @@ function MainAppContent() {
           <Route path="/candidate/profile" element={<CandidateRoute><CandidateProfilePage /></CandidateRoute>} />
           <Route path="/candidate/applications" element={<CandidateRoute><AppliedJobsPage applicationsList={applications} onWithdrawApp={handleWithdrawApplication} /></CandidateRoute>} />
           <Route path="/candidate/saved-jobs" element={<CandidateRoute><SavedJobsPage jobsList={jobs} onApplyJob={handleApplyJob} onBookmarkJob={handleBookmarkJob} bookmarkedJobIds={bookmarkedJobIds} /></CandidateRoute>} />
+          {/* THE 4 CORE PLATFORM FEATURES */}
+          {/* 1. Portfolio Website */}
+          <Route path="/portfolio" element={<PortfolioTemplatesMarketplacePage />} />
+          <Route path="/portfolio/templates" element={<PortfolioTemplatesMarketplacePage />} />
+          <Route path="/portfolio-builder" element={<ShareablePortfolioBuilderPage />} />
+          <Route path="/portfolio/builder" element={<ShareablePortfolioBuilderPage />} />
+          <Route path="/tools/portfolio-builder" element={<ShareablePortfolioBuilderPage />} />
+          <Route path="/tools/shareable-portfolio" element={<ShareablePortfolioBuilderPage />} />
+          <Route path="/portfolio/editor" element={<PortfolioBuilderEditorPage />} />
+          <Route path="/u/:handle" element={<ShareablePortfolioBuilderPage />} />
+          <Route path="/p/:handle" element={<ShareablePortfolioBuilderPage />} />
+
+          {/* 2. Resume Builder */}
           <Route path="/resume-builder" element={<ResumeBuilderPage />} />
           <Route path="/resume-builder/:resumeId" element={<ResumeBuilderPage />} />
           <Route path="/tools/ats-resume-builder" element={<ResumeBuilderPage />} />
-          <Route path="/portfolio" element={<ShareablePortfolioBuilderPage />} />
-          <Route path="/portfolio-builder" element={<ShareablePortfolioBuilderPage />} />
-          <Route path="/tools/portfolio-builder" element={<ShareablePortfolioBuilderPage />} />
-          <Route path="/p/:handle" element={<ShareablePortfolioBuilderPage />} />
+
+          {/* 3. Employer Candidate Search (No dashboard needed) */}
+          <Route path="/search-profiles" element={<CandidateSearchPage />} />
+          <Route path="/candidates" element={<CandidateSearchPage />} />
+          <Route path="/employer/candidates" element={<CandidateSearchPage />} />
+          <Route path="/employer-search" element={<CandidateSearchPage />} />
+
+          {/* 4. Chrome Extension for Form Autofill */}
+          <Route path="/autofill-extension" element={<ChromeExtensionPage />} />
+          <Route path="/extension" element={<ChromeExtensionPage />} />
+          <Route path="/tools/chrome-extension" element={<ChromeExtensionPage />} />
 
           {/* Legacy Candidate route redirects */}
           <Route path="/dashboard" element={
@@ -374,7 +429,7 @@ function MainAppContent() {
 
       {/* Footer (Rendered for candidate experience) */}
       {!isEmployerRoute && !isAdminRoute && (
-        <div className="pl-12 sm:pl-14 md:pl-16 lg:pl-[72px]">
+        <div className="w-full">
           <Footer
             onSubscribeNewsletter={handleSubscribeNewsletter}
             onLinkClick={handleNavClick}

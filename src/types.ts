@@ -263,7 +263,7 @@ export interface FAQItem {
   id: string;
   question: string;
   answer: string;
-  category: 'Students' | 'Employers' | 'General';
+  category: 'Students' | 'Employers' | 'General' | 'Portfolio' | 'Resume' | 'Extension' | 'Privacy' | string;
 }
 
 export interface SEOCategory {

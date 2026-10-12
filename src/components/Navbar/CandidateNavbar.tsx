@@ -37,14 +37,17 @@ export const CandidateNavbar: React.FC = () => {
   }, []);
 
   const isActive = (path: string) => {
-    if (path === '/' && currentPath === '/') return true;
-    if (path !== '/' && currentPath.startsWith(path)) return true;
-    return false;
+    if (path === '/') return currentPath === '/' || currentPath === '/landing';
+    return currentPath.startsWith(path);
   };
 
   const navItems = [
+    { label: 'Home', path: '/' },
+    { label: 'Hire From Us', path: '/#hire-from-us' },
+    { label: 'Jobs', path: '/jobs' },
+    { label: 'Portfolio', path: '/portfolio' },
     { label: 'Resume Builder', path: '/resume-builder' },
-    { label: 'Portfolio Builder', path: '/portfolio' },
+    { label: 'Chrome Extension', path: '/autofill-extension' },
   ];
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -63,7 +66,7 @@ export const CandidateNavbar: React.FC = () => {
 
   return (
     <header 
-      className={`fixed top-0 left-0 right-0 z-40 h-[64px] transition-all duration-200 pl-12 sm:pl-14 md:pl-16 lg:pl-[72px] ${
+      className={`fixed top-0 left-0 right-0 z-40 h-[64px] transition-all duration-200 ${
         scrolled
           ? 'bg-white border-b border-slate-200 shadow-sm shadow-slate-900/5'
           : 'bg-white border-b border-slate-200/90 shadow-2xs'
@@ -85,17 +88,52 @@ export const CandidateNavbar: React.FC = () => {
           </Link>
 
           {/* Desktop Candidate Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-6">
-            {/* Home */}
+          <nav className="hidden lg:flex items-center gap-5 xl:gap-6">
+            {/* Home / Landing */}
             <Link
               to="/"
               className={`text-xs font-semibold transition-all relative py-1 ${
-                location.pathname === '/'
+                isActive('/')
                   ? 'text-blue-600 after:absolute after:bottom-[-2px] after:left-1/2 after:-translate-x-1/2 after:w-3.5 after:h-0.5 after:bg-blue-600 after:rounded-full'
                   : 'text-slate-600 hover:text-blue-600'
               }`}
             >
               Home
+            </Link>
+
+            {/* Hire From Us (Employer Hub) */}
+            <a
+              href="/#hire-from-us"
+              className="text-xs font-bold text-amber-700 hover:text-amber-600 transition-all relative py-1 flex items-center gap-1"
+            >
+              <span>Hire From Us</span>
+              <span className="px-1.5 py-0.2 rounded-full bg-amber-100 text-amber-900 text-[9px] font-black border border-amber-300">
+                2L+
+              </span>
+            </a>
+
+            {/* Jobs */}
+            <Link
+              to="/jobs"
+              className={`text-xs font-semibold transition-all relative py-1 ${
+                isActive('/jobs')
+                  ? 'text-blue-600 after:absolute after:bottom-[-2px] after:left-1/2 after:-translate-x-1/2 after:w-3.5 after:h-0.5 after:bg-blue-600 after:rounded-full'
+                  : 'text-slate-600 hover:text-blue-600'
+              }`}
+            >
+              Jobs
+            </Link>
+
+            {/* Portfolio Website */}
+            <Link
+              to="/portfolio"
+              className={`text-xs font-semibold transition-all relative py-1 ${
+                isActive('/portfolio')
+                  ? 'text-blue-600 after:absolute after:bottom-[-2px] after:left-1/2 after:-translate-x-1/2 after:w-3.5 after:h-0.5 after:bg-blue-600 after:rounded-full'
+                  : 'text-slate-600 hover:text-blue-600'
+              }`}
+            >
+              Portfolio
             </Link>
 
             {/* Resume Builder */}
@@ -109,18 +147,6 @@ export const CandidateNavbar: React.FC = () => {
             >
               Resume Builder
             </Link>
-
-            {/* Portfolio Builder */}
-            <Link
-              to="/portfolio"
-              className={`text-xs font-semibold transition-all relative py-1 ${
-                isActive('/portfolio')
-                  ? 'text-blue-600 after:absolute after:bottom-[-2px] after:left-1/2 after:-translate-x-1/2 after:w-3.5 after:h-0.5 after:bg-blue-600 after:rounded-full'
-                  : 'text-slate-600 hover:text-blue-600'
-              }`}
-            >
-              Portfolio Builder
-            </Link>
           </nav>
         </div>
 
@@ -128,14 +154,14 @@ export const CandidateNavbar: React.FC = () => {
 
         {/* Right Header Actions */}
         <div className="hidden md:flex items-center gap-2 shrink-0">
-          {/* "For Employers" CTA */}
+          {/* Employer Login CTA */}
           <Link
-            to="/employers"
-            className="px-3 py-1.5 rounded-lg text-xs font-semibold text-amber-800 bg-amber-50/70 hover:bg-amber-100 border border-amber-300/80 transition-all flex items-center gap-1.5 shadow-2xs shrink-0 cursor-pointer"
-            title="Switch to Employer & Hiring Portal"
+            to="/employers/login"
+            className="px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-950 bg-gradient-to-b from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 border border-amber-300 shadow-sm shadow-amber-500/20 hover:shadow-amber-500/30 transition-all flex items-center gap-1.5 shrink-0 cursor-pointer"
+            title="Employer Login"
           >
-            <Briefcase className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-            <span>For Employers</span>
+            <Building2 className="w-3.5 h-3.5 text-slate-950 stroke-[2.2] shrink-0" />
+            <span>Employer Login</span>
           </Link>
 
           {/* Authenticated / Unauthenticated Controls */}
@@ -217,10 +243,10 @@ export const CandidateNavbar: React.FC = () => {
         {/* Mobile Hamburger Controls */}
         <div className="flex md:hidden items-center gap-2">
           <Link
-            to="/employers"
-            className="px-2.5 py-1 text-[11px] font-extrabold text-amber-950 bg-amber-100 rounded-lg border border-amber-200"
+            to="/search-profiles"
+            className="px-2.5 py-1 text-[11px] font-extrabold text-blue-700 bg-blue-50 rounded-lg border border-blue-200"
           >
-            Employers
+            Search Candidates
           </Link>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -302,20 +328,30 @@ export const CandidateNavbar: React.FC = () => {
                   </div>
                 </>
               ) : (
-                <div className="grid grid-cols-2 gap-2">
+                <div className="flex flex-col gap-2">
+                  <div className="grid grid-cols-2 gap-2">
+                    <Link
+                      to="/login"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="py-2.5 text-center bg-slate-100 font-bold text-xs text-slate-800 rounded-xl"
+                    >
+                      Candidate Login
+                    </Link>
+                    <Link
+                      to="/register"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="py-2.5 text-center bg-blue-600 text-white font-bold text-xs rounded-xl"
+                    >
+                      Register Free
+                    </Link>
+                  </div>
                   <Link
-                    to="/login"
+                    to="/employers/login"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="py-2.5 text-center bg-slate-100 font-bold text-xs text-slate-800 rounded-xl"
+                    className="py-2 text-center text-xs font-semibold text-amber-900 bg-amber-50 hover:bg-amber-100 border border-amber-200/90 rounded-xl flex items-center justify-center gap-1.5 transition-colors"
                   >
-                    Candidate Login
-                  </Link>
-                  <Link
-                    to="/register"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="py-2.5 text-center bg-blue-600 text-white font-bold text-xs rounded-xl"
-                  >
-                    Register Free
+                    <Building2 className="w-3.5 h-3.5 text-amber-700" />
+                    <span>Employer Login</span>
                   </Link>
                 </div>
               )}

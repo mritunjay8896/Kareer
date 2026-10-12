@@ -13,9 +13,11 @@ import {
   Check,
   ChevronDown,
   ChevronUp,
-  X
+  X,
+  LayoutList,
+  LayoutGrid
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { JobItem } from '../types';
 import { MOCK_JOBS } from '../data/mockData';
 import { JobSearchBar } from '../components/Job/JobSearchBar';
@@ -37,6 +39,7 @@ export const JobsPage: React.FC<JobsPageProps> = ({
   onBookmarkJob,
   bookmarkedJobIds
 }) => {
+  const [searchParams] = useSearchParams();
   const activeJobs = jobsList || MOCK_JOBS;
   // Search & Filter State
   const [searchQuery, setSearchQuery] = useState('');
@@ -46,6 +49,35 @@ export const JobsPage: React.FC<JobsPageProps> = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
   const [isCareerPopupOpen, setIsCareerPopupOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
+
+  useEffect(() => {
+    const q = searchParams.get('search');
+    if (q) setSearchQuery(q);
+
+    const loc = searchParams.get('location');
+    if (loc) setSearchLocation(loc);
+
+    const exp = searchParams.get('experience');
+    if (exp) setSearchExperience(exp);
+
+    const filter = searchParams.get('filter');
+    if (filter) {
+      if (filter === 'Fresher' || filter === 'Graduate') {
+        setSearchExperience(filter);
+      } else {
+        setSearchQuery(filter);
+      }
+    }
+
+    const type = searchParams.get('type');
+    if (type) {
+      setFilters(prev => ({
+        ...prev,
+        workModes: [...new Set([...prev.workModes, type])]
+      }));
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     const handleOpenPopup = () => {
@@ -149,7 +181,7 @@ export const JobsPage: React.FC<JobsPageProps> = ({
   }, [searchQuery, searchLocation, searchExperience, filters, sortBy]);
 
   // Pagination
-  const pageSize = 6;
+  const pageSize = viewMode === 'list' ? 8 : 6;
   const totalPages = Math.ceil(filteredJobs.length / pageSize) || 1;
   const paginatedJobs = filteredJobs.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
@@ -200,8 +232,8 @@ export const JobsPage: React.FC<JobsPageProps> = ({
           {/* Job List Column (60% width) */}
           <div className="w-full lg:w-[60%] flex-1 min-w-0 space-y-4">
             
-            {/* Top Bar: Count & Sorting */}
-            <div className="bg-white rounded-lg sm:rounded-2xl p-1.5 sm:p-4 border border-slate-200/80 shadow-xs flex items-center justify-between gap-2 sm:gap-3">
+            {/* Top Bar: Count & Sorting & View Mode Toggle */}
+            <div className="bg-white rounded-lg sm:rounded-2xl p-2 sm:p-4 border border-slate-200/80 shadow-xs flex items-center justify-between gap-2 sm:gap-3">
               <div className="flex items-center gap-2 sm:gap-3">
                 <button
                   onClick={() => setMobileFilterOpen(true)}
@@ -210,25 +242,57 @@ export const JobsPage: React.FC<JobsPageProps> = ({
                   <SlidersHorizontal className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Filters
                 </button>
                 <div className="hidden sm:block">
-                  <h2 className="hidden sm:block font-bold text-slate-900 text-sm sm:text-base">
+                  <h2 className="font-bold text-slate-900 text-sm sm:text-base">
                     Showing {filteredJobs.length} Job Vacancies
                   </h2>
-                  <p className="hidden sm:block text-xs text-slate-500">Updated every 15 minutes with direct recruiter links</p>
+                  <p className="text-xs text-slate-500">Updated every 15 minutes with direct recruiter links</p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs">
-                <span className="text-slate-500 font-medium">Sort by:</span>
-                <select
-                  value={sortBy}
-                  onChange={(e: any) => setSortBy(e.target.value)}
-                  className="bg-slate-50 border border-slate-200 text-slate-900 font-semibold rounded-lg sm:rounded-xl px-2 py-1 sm:px-3 sm:py-1.5 focus:outline-none cursor-pointer text-[10.5px] sm:text-xs"
-                >
-                  <option value="newest">Newest First</option>
-                  <option value="relevance">Most Relevant</option>
-                  <option value="salary">Highest Salary</option>
-                  <option value="applicants">Most Applied</option>
-                </select>
+              <div className="flex items-center gap-2 sm:gap-3 text-[11px] sm:text-xs">
+                {/* View Mode Toggle: List (Rectangular Bar) vs Grid */}
+                <div className="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200">
+                  <button
+                    type="button"
+                    onClick={() => setViewMode('list')}
+                    className={`p-1.5 rounded-md transition-colors cursor-pointer flex items-center gap-1 ${
+                      viewMode === 'list'
+                        ? 'bg-white text-blue-600 shadow-2xs font-bold'
+                        : 'text-slate-500 hover:text-slate-800'
+                    }`}
+                    title="List View (Rectangular Bars)"
+                  >
+                    <LayoutList className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline text-[11px]">List</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setViewMode('grid')}
+                    className={`p-1.5 rounded-md transition-colors cursor-pointer flex items-center gap-1 ${
+                      viewMode === 'grid'
+                        ? 'bg-white text-blue-600 shadow-2xs font-bold'
+                        : 'text-slate-500 hover:text-slate-800'
+                    }`}
+                    title="Grid View (Cards)"
+                  >
+                    <LayoutGrid className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline text-[11px]">Grid</span>
+                  </button>
+                </div>
+
+                <div className="flex items-center gap-1 sm:gap-1.5">
+                  <span className="text-slate-500 font-medium hidden sm:inline">Sort by:</span>
+                  <select
+                    value={sortBy}
+                    onChange={(e: any) => setSortBy(e.target.value)}
+                    className="bg-slate-50 border border-slate-200 text-slate-900 font-semibold rounded-lg sm:rounded-xl px-2 py-1 sm:px-3 sm:py-1.5 focus:outline-none cursor-pointer text-[10.5px] sm:text-xs"
+                  >
+                    <option value="newest">Newest First</option>
+                    <option value="relevance">Most Relevant</option>
+                    <option value="salary">Highest Salary</option>
+                    <option value="applicants">Most Applied</option>
+                  </select>
+                </div>
               </div>
             </div>
 
@@ -260,20 +324,37 @@ export const JobsPage: React.FC<JobsPageProps> = ({
               </div>
             )}
 
-            {/* Job Cards - Mobile Masonry Grid / Desktop Feed */}
+            {/* Job Items - Bar Style Rectangular List Style */}
             {paginatedJobs.length > 0 ? (
-              <div className="columns-1 sm:columns-2 lg:columns-1 gap-2.5 sm:gap-3 space-y-2.5 sm:space-y-0">
-                {paginatedJobs.map((job) => (
-                  <div key={job.id} className="break-inside-avoid mb-2.5 sm:mb-3">
-                    <JobCard
-                      job={job}
-                      onApply={onApplyJob}
-                      isSaved={bookmarkedJobIds.includes(job.id)}
-                      onToggleSave={onBookmarkJob}
-                    />
-                  </div>
-                ))}
-              </div>
+              viewMode === 'list' ? (
+                <div className="flex flex-col gap-3 sm:gap-3.5 w-full">
+                  {paginatedJobs.map((job) => (
+                    <div key={job.id} className="w-full">
+                      <JobCard
+                        job={job}
+                        onApply={onApplyJob}
+                        isSaved={bookmarkedJobIds.includes(job.id)}
+                        onToggleSave={onBookmarkJob}
+                        layout="bar"
+                      />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                  {paginatedJobs.map((job) => (
+                    <div key={job.id} className="w-full">
+                      <JobCard
+                        job={job}
+                        onApply={onApplyJob}
+                        isSaved={bookmarkedJobIds.includes(job.id)}
+                        onToggleSave={onBookmarkJob}
+                        layout="card"
+                      />
+                    </div>
+                  ))}
+                </div>
+              )
             ) : (
               <div className="bg-white rounded-2xl p-12 text-center border border-slate-200 space-y-4">
                 <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto text-slate-400">

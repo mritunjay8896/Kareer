@@ -1,251 +1,574 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { User, Mail, Lock, Eye, EyeOff, ArrowRight, AlertCircle } from 'lucide-react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { ArrowRight, ArrowLeft } from 'lucide-react';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { auth, db } from '../lib/firebase';
 import { useAuth } from '../context/AuthContext';
-import registerBannerImg from '../image1/Register to find best webdevelopment jobs.png';
+
+import { 
+  FullRegistrationData 
+} from '../components/Registration/types';
+import { 
+  INITIAL_REGISTRATION_DATA 
+} from '../components/Registration/constants';
+import { 
+  StepIndicator 
+} from '../components/Registration/StepIndicator';
+import { 
+  RegistrationSidebar 
+} from '../components/Registration/RegistrationSidebar';
+import { 
+  SideValuePropCard 
+} from '../components/Registration/SideValuePropCard';
+
+import { Step1Account } from '../components/Registration/Step1Account';
+import { Step2ProfileType } from '../components/Registration/Step2ProfileType';
+import { Step3PersonalDetails } from '../components/Registration/Step3PersonalDetails';
+import { Step4Education } from '../components/Registration/Step4Education';
+import { Step5Experience } from '../components/Registration/Step5Experience';
+import { Step6Skills } from '../components/Registration/Step6Skills';
+import { Step7Projects } from '../components/Registration/Step7Projects';
+import { Step8CertificationsAchievements } from '../components/Registration/Step8CertificationsAchievements';
+import { Step9Links } from '../components/Registration/Step9Links';
+import { Step10Preferences } from '../components/Registration/Step10Preferences';
+import { Step11PortfolioSetup } from '../components/Registration/Step11PortfolioSetup';
+import { Step12Review } from '../components/Registration/Step12Review';
+
+const DRAFT_STORAGE_KEY = 'glitread_candidate_registration_draft';
 
 export const CandidateRegisterPage: React.FC = () => {
-  const { currentUser, userRole, authInitialized, registerCandidate, demoCandidateLogin } = useAuth();
+  const { currentUser, userRole, authInitialized } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = (location.state as any)?.from?.pathname || new URLSearchParams(location.search).get('redirect') || '/candidate/dashboard';
 
+  // If already authenticated and not on registration flow, redirect
   useEffect(() => {
     if (authInitialized && currentUser) {
       if (userRole === 'employer') {
         navigate('/employer/dashboard', { replace: true });
-      } else {
-        navigate('/candidate/dashboard', { replace: true });
       }
     }
-  }, [authInitialized, currentUser, userRole, navigate]);
+  }, [authInitialized, currentUser, userRole, navigate, from]);
 
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  // Main Form Data State
+  const [formData, setFormData] = useState<FullRegistrationData>(() => {
+    try {
+      const savedDraft = localStorage.getItem(DRAFT_STORAGE_KEY);
+      if (savedDraft) {
+        const parsed = JSON.parse(savedDraft);
+        return {
+          ...INITIAL_REGISTRATION_DATA,
+          ...parsed,
+          account: {
+            ...INITIAL_REGISTRATION_DATA.account,
+            email: parsed.account?.email || ''
+          }
+        };
+      }
+    } catch (e) {
+      console.warn('Error reading saved registration draft:', e);
+    }
+    return INITIAL_REGISTRATION_DATA;
+  });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!name || !email || !password) {
-      setError('Please fill in all fields.');
+  const [currentStep, setCurrentStep] = useState<number>(0);
+  const [maxVisitedStep, setMaxVisitedStep] = useState<number>(0);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [submitting, setSubmitting] = useState<boolean>(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
+  // Auto-save draft to localStorage whenever form changes (excluding raw passwords)
+  useEffect(() => {
+    try {
+      const safeToSave = {
+        ...formData,
+        account: {
+          email: formData.account.email
+        }
+      };
+      localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(safeToSave));
+    } catch (e) {
+      console.warn('Could not save registration draft to localStorage:', e);
+    }
+  }, [formData]);
+
+  // Calculate Profile Completion Dynamically
+  const completionPercentage = useMemo(() => {
+    let score = 0;
+    if (formData.account.email) score += 10;
+    if (formData.candidateType) score += 10;
+    if (formData.personal.fullName && formData.personal.phone && formData.personal.city) {
+      score += 10;
+      if (formData.personal.headline || formData.personal.about) score += 5;
+    }
+    if (formData.education.length > 0 && formData.education[0].degree && formData.education[0].institution) {
+      score += 15;
+    }
+    if (formData.candidateType === 'student' || formData.candidateType === 'fresher') {
+      score += 10;
+    } else if (formData.experience.length > 0) {
+      score += 10;
+    }
+    if (formData.skills.length >= 1) {
+      score += 10;
+      if (formData.skills.length >= 3) score += 5;
+    }
+    if (formData.projects.length >= 1) score += 10;
+    const hasCreds = formData.certifications.length > 0 || formData.achievements.length > 0;
+    const hasLinks = Object.values(formData.links).some((val) => Boolean(val));
+    if (hasCreds || hasLinks) score += 5;
+    if (formData.careerPreferences.lookingFor?.length > 0 && formData.careerPreferences.desiredRoles?.length > 0) {
+      score += 10;
+    }
+    return Math.min(100, Math.max(10, score));
+  }, [formData]);
+
+  // Validation before advancing
+  const validateStep = (stepIndex: number): boolean => {
+    const newErrors: Record<string, string> = {};
+
+    if (stepIndex === 0) {
+      const { email, password, confirmPassword } = formData.account;
+      if (!email) {
+        newErrors.email = 'Email address is required.';
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        newErrors.email = 'Please enter a valid email address.';
+      }
+
+      if (!password) {
+        newErrors.password = 'Password is required.';
+      } else if (password.length < 8) {
+        newErrors.password = 'Password must be at least 8 characters.';
+      }
+
+      if (!confirmPassword) {
+        newErrors.confirmPassword = 'Confirm your password.';
+      } else if (password !== confirmPassword) {
+        newErrors.confirmPassword = 'Passwords do not match.';
+      }
+    } else if (stepIndex === 2) {
+      const { fullName, phone, city } = formData.personal;
+      if (!fullName.trim()) newErrors.fullName = 'Full Name is required.';
+      if (!phone.trim()) newErrors.phone = 'Phone number is required.';
+      if (!city.trim()) newErrors.city = 'City is required.';
+    } else if (stepIndex === 3) {
+      if (formData.candidateType === 'student' || formData.candidateType === 'fresher') {
+        if (formData.education.length === 0 || !formData.education[0].degree || !formData.education[0].institution) {
+          newErrors.education = 'Please add at least one education qualification.';
+        }
+      }
+    } else if (stepIndex === 5) {
+      if (formData.skills.length === 0) {
+        newErrors.skills = 'Please add at least one core skill.';
+      }
+    } else if (stepIndex === 9) {
+      if (!formData.careerPreferences.lookingFor || formData.careerPreferences.lookingFor.length === 0) {
+        newErrors.lookingFor = 'Please select at least one opportunity type.';
+      }
+      if (!formData.careerPreferences.desiredRoles || formData.careerPreferences.desiredRoles.length === 0) {
+        newErrors.desiredRoles = 'Please select at least one desired job role.';
+      }
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleNext = () => {
+    if (validateStep(currentStep)) {
+      setErrors({});
+      const next = currentStep + 1;
+      setCurrentStep(next);
+      setMaxVisitedStep((prev) => Math.max(prev, next));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const handleBack = () => {
+    if (currentStep > 0) {
+      setErrors({});
+      setCurrentStep((prev) => prev - 1);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const handleCancel = () => {
+    navigate('/');
+  };
+
+  const handleJumpToStep = (index: number) => {
+    setErrors({});
+    setCurrentStep(index);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Final Registration Submission
+  const handleCompleteRegistration = async () => {
+    if (!validateStep(0) || !validateStep(2) || !validateStep(5) || !validateStep(9)) {
+      setSubmitError('Please complete all required fields highlighted in the earlier steps.');
       return;
     }
 
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters.');
-      return;
-    }
+    setSubmitting(true);
+    setSubmitError(null);
+
+    let uid: string;
+    const email = formData.account.email;
+    const password = formData.account.password || 'Glitread@2026';
+    const fullName = formData.personal.fullName;
 
     try {
-      setLoading(true);
-      setError(null);
-      await registerCandidate(name, email, password, '+91 98765 43210');
-      navigate('/candidate/dashboard');
+      try {
+        const authRes = await createUserWithEmailAndPassword(auth, email, password);
+        uid = authRes.user.uid;
+      } catch (authErr: any) {
+        if (authErr.code === 'auth/email-already-in-use') {
+          throw new Error('An account already exists with this email address. Please log in instead.');
+        } else if (
+          authErr.code === 'auth/operation-not-allowed' ||
+          authErr.code === 'auth/admin-restricted-operation' ||
+          authErr.code === 'auth/configuration-not-found'
+        ) {
+          uid = `candidate-${Date.now()}`;
+        } else {
+          throw new Error(authErr.message || 'Account creation failed. Please check your credentials.');
+        }
+      }
+
+      // 1. Structured Document for users/{uid}
+      const structuredUserDoc = {
+        account: {
+          email: formData.account.email
+        },
+        candidateType: formData.candidateType,
+        personal: { ...formData.personal },
+        education: formData.education,
+        experience: formData.experience,
+        skills: formData.skills,
+        projects: formData.projects,
+        certifications: formData.certifications,
+        achievements: formData.achievements,
+        links: formData.links,
+        careerPreferences: formData.careerPreferences,
+        portfolio: {
+          ...formData.portfolio,
+          username: formData.portfolio.username || uid
+        },
+        profileCompletion: completionPercentage,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      };
+
+      await setDoc(doc(db, 'users', uid), {
+        uid,
+        email: formData.account.email,
+        displayName: fullName,
+        role: 'candidate',
+        photoURL: formData.personal.photoUrl || '',
+        ...structuredUserDoc
+      });
+
+      // 2. Compatibility Document for candidates/{uid}
+      const candidateProfileDoc = {
+        id: uid,
+        fullName: formData.personal.fullName,
+        email: formData.account.email,
+        phone: formData.personal.phone,
+        location: `${formData.personal.city}${formData.personal.state ? `, ${formData.personal.state}` : ''}, ${formData.personal.country}`,
+        avatar: formData.personal.photoUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=250',
+        headline: formData.personal.headline || 'Software Professional',
+        bio: formData.personal.about || '',
+        atsScore: 85,
+        profileCompletion: completionPercentage,
+        resumeName: `${formData.personal.fullName.replace(/\s+/g, '_')}_Resume.pdf`,
+        resumeUrl: '',
+        resumeLastUpdated: 'Today',
+        portfolioUrl: `https://glitread.com/p/${formData.portfolio.username || uid}`,
+        linkedIn: formData.links.linkedin || '',
+        github: formData.links.github || '',
+        noticePeriod: formData.careerPreferences.availability || 'Immediately',
+        expectedSalary: formData.careerPreferences.expectedSalary || '₹6 - ₹10 LPA',
+        preferredLocation: formData.careerPreferences.locations?.join(', ') || formData.personal.city,
+        skills: formData.skills.map((s) => s.name),
+        languages: ['English', 'Hindi'],
+        achievements: formData.achievements.map((a) => a.title),
+        education: formData.education.map((edu) => ({
+          id: edu.id,
+          degree: edu.degree,
+          fieldOfStudy: edu.fieldOfStudy,
+          institution: edu.institution,
+          startYear: edu.startYear,
+          endYear: edu.endYear,
+          grade: edu.grade
+        })),
+        experience: formData.experience.map((exp) => ({
+          id: exp.id,
+          role: exp.jobTitle,
+          company: exp.company,
+          location: exp.location,
+          startDate: exp.startDate,
+          endDate: exp.endDate,
+          current: exp.currentlyWorking,
+          description: exp.description || exp.responsibilities
+        })),
+        projects: formData.projects.map((proj) => ({
+          id: proj.id,
+          title: proj.name,
+          description: proj.shortDescription || proj.detailedDescription,
+          technologies: proj.technologies
+        })),
+        certifications: formData.certifications.map((cert) => ({
+          id: cert.id,
+          name: cert.name,
+          issuer: cert.issuer,
+          issueDate: cert.issueDate,
+          credentialUrl: cert.credentialUrl
+        })),
+        candidateType: formData.candidateType,
+        careerPreferences: formData.careerPreferences,
+        portfolioPreferences: formData.portfolio,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      };
+
+      await setDoc(doc(db, 'candidates', uid), candidateProfileDoc);
+      localStorage.removeItem(DRAFT_STORAGE_KEY);
+      navigate(from || '/candidate/dashboard', { replace: true });
     } catch (err: any) {
-      setError(err.message || 'Registration failed. Please try again.');
+      console.error('Registration submission error:', err);
+      setSubmitError(err.message || 'Registration failed. Please check your details and try again.');
     } finally {
-      setLoading(false);
+      setSubmitting(false);
     }
   };
 
-  const handleGoogleDemoLogin = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      await demoCandidateLogin();
-      navigate('/candidate/dashboard');
-    } catch (err: any) {
-      setError(err.message || 'Google authentication demo failed.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleGitHubDemoLogin = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      await demoCandidateLogin();
-      navigate('/candidate/dashboard');
-    } catch (err: any) {
-      setError(err.message || 'GitHub authentication demo failed.');
-    } finally {
-      setLoading(false);
-    }
-  };
+  const isReviewStep = currentStep === 11;
 
   return (
-    <div
-      id="candidate-register-container"
-      className="w-full min-h-[calc(100vh-64px)] relative flex items-center justify-center lg:justify-end px-4 sm:px-6 lg:px-10 xl:px-14 py-6 sm:py-8 lg:py-10 overflow-x-hidden bg-[#eef5fc]"
-      style={{
-        backgroundImage: `url("${registerBannerImg}")`,
-        backgroundSize: 'min(100%, 1500px) auto',
-        backgroundPosition: 'left 35% center',
-        backgroundRepeat: 'no-repeat',
-      }}
-    >
-      {/* Background Soft Fallback & Ambient Overlay for smaller viewports */}
-      <div className="absolute inset-0 bg-gradient-to-r from-blue-900/5 via-transparent to-white/35 pointer-events-none lg:block hidden" />
-      <div className="absolute inset-0 bg-blue-50/75 backdrop-blur-[2px] pointer-events-none lg:hidden" />
-
-      {/* Floating Right Registration Card with reduced, compact width */}
-      <div className="relative z-10 w-full max-w-[370px] sm:max-w-[390px] bg-white/95 sm:bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-7 shadow-[0_16px_50px_-12px_rgba(20,50,110,0.18)] border border-slate-100 backdrop-blur-sm">
-        
-        {/* Toggle switch between Register & Login replacing glitread text */}
-        <div className="mb-5">
-          <div className="bg-slate-100/90 p-1 rounded-xl flex items-center gap-1 border border-slate-200/70">
-            <span className="flex-1 py-1.5 px-3 text-center text-xs font-bold rounded-lg bg-white text-blue-600 shadow-xs select-none">
-              Register
-            </span>
-            <Link
-              to="/login"
-              className="flex-1 py-1.5 px-3 text-center text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-200/50 transition-colors select-none"
-            >
-              Login
-            </Link>
-          </div>
-        </div>
-
-        {/* Heading & Subtitle */}
-        <div className="mb-5">
-          <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight leading-snug">
-            Create Your Account
-          </h1>
-          <p className="text-xs text-slate-500 mt-1 leading-relaxed font-normal">
-            Join thousands of students building their careers today.
-          </p>
-        </div>
-
-        {error && (
-          <div className="p-3 mb-4 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl text-xs font-medium flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 shrink-0 text-rose-500" />
-            <span>{error}</span>
-          </div>
-        )}
-
-        {/* Form Inputs */}
-        <form onSubmit={handleSubmit} className="space-y-3.5">
-          {/* Full Name */}
-          <div className="relative">
-            <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
-            <input
-              type="text"
-              required
-              value={name}
-              onChange={e => setName(e.target.value)}
-              placeholder="Full Name"
-              className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 hover:border-slate-300 rounded-xl text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition-all"
-            />
+    <div className="min-h-[calc(100vh-3.5rem)] bg-[#f4f7fc] py-3.5 sm:py-6 px-3.5 sm:px-6 flex items-center justify-center">
+      <div className="w-full max-w-[1292px] mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 xl:gap-9 items-center">
+          
+          {/* ========================================================
+              LEFT COLUMN: Step badge, Headings, Feature items, 
+              Illustration & Tagline (Inline layout)
+             ======================================================== */}
+          <div className="lg:col-span-5 xl:col-span-5">
+            <RegistrationSidebar currentStep={currentStep} totalSteps={11} />
           </div>
 
-          {/* Email Address */}
-          <div className="relative">
-            <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              placeholder="Email Address"
-              className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 hover:border-slate-300 rounded-xl text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition-all"
-            />
-          </div>
-
-          {/* Password with Eye Toggle */}
-          <div className="relative">
-            <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
-            <input
-              type={showPassword ? 'text' : 'password'}
-              required
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              placeholder="Password"
-              className="w-full pl-10 pr-10 py-3 bg-white border border-slate-200 hover:border-slate-300 rounded-xl text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none transition-all"
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3.5 top-3.5 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
-            >
-              {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-            </button>
-          </div>
-
-          {/* Primary Register Button */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-3.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold text-sm rounded-xl shadow-lg shadow-blue-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer mt-1"
-          >
-            <span>{loading ? 'Registering...' : 'Register'}</span>
-            <ArrowRight className="w-4 h-4" />
-          </button>
-        </form>
-
-        {/* OR Divider */}
-        <div className="relative my-5">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-slate-200" />
-          </div>
-          <div className="relative flex justify-center text-[11px] uppercase">
-            <span className="bg-white px-3 font-bold text-slate-400 tracking-wider">OR</span>
-          </div>
-        </div>
-
-        {/* Social Authentication Buttons */}
-        <div className="space-y-2.5">
-          {/* Continue with Google */}
-          <button
-            type="button"
-            onClick={handleGoogleDemoLogin}
-            disabled={loading}
-            className="w-full py-2.5 px-4 bg-white hover:bg-slate-50 border border-slate-200 hover:border-slate-300 rounded-xl text-xs font-semibold text-slate-700 transition-all flex items-center justify-center gap-2.5 shadow-xs cursor-pointer"
-          >
-            <svg className="w-4 h-4" viewBox="0 0 24 24">
-              <path
-                fill="#4285F4"
-                d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"
+          {/* ========================================================
+              RIGHT COLUMN: Main White Card with Horizontal Stepper,
+              Form Fields, Right-side Value Prop Card, & Next Button
+             ======================================================== */}
+          <div className="lg:col-span-7 xl:col-span-7">
+            <div className="bg-white rounded-xl sm:rounded-2xl border border-slate-100 shadow-md shadow-slate-200/40 p-5 sm:p-7 xl:p-8.5 relative">
+              
+              {/* Top 11-Step Horizontal Stepper */}
+              <StepIndicator
+                currentStep={currentStep}
+                totalSteps={11}
+                onSelectStep={handleJumpToStep}
+                maxVisitedStep={maxVisitedStep}
               />
-              <path
-                fill="#34A853"
-                d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"
-              />
-              <path
-                fill="#FBBC05"
-                d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.16 0 9.94 0 12s.45 3.84 1.25 5.42l4.03-3.15z"
-              />
-              <path
-                fill="#EA4335"
-                d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"
-              />
-            </svg>
-            <span>Continue with Google</span>
-          </button>
 
-          {/* Continue with GitHub */}
-          <button
-            type="button"
-            onClick={handleGitHubDemoLogin}
-            disabled={loading}
-            className="w-full py-2.5 px-4 bg-white hover:bg-slate-50 border border-slate-200 hover:border-slate-300 rounded-xl text-xs font-semibold text-slate-700 transition-all flex items-center justify-center gap-2.5 shadow-xs cursor-pointer"
-          >
-            <svg className="w-4 h-4 fill-slate-800" viewBox="0 0 24 24">
-              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
-            </svg>
-            <span>Continue with GitHub</span>
-          </button>
+              <div className="border-t border-slate-100 pt-4 sm:pt-6">
+                {/* When on Review Step (Step 12), show full width review */}
+                {isReviewStep ? (
+                  <Step12Review
+                    data={formData}
+                    completionPercentage={completionPercentage}
+                    onJumpToStep={handleJumpToStep}
+                    onSubmit={handleCompleteRegistration}
+                    loading={submitting}
+                    error={submitError}
+                  />
+                ) : (
+                  /* 2-Column Layout Inside the Card (Matches Screenshot) */
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 xl:gap-7 items-stretch">
+                    
+                    {/* Inner Left: Form Fields (approx 62% width) */}
+                    <div className="lg:col-span-7 xl:col-span-7 flex flex-col justify-between space-y-4">
+                      <div>
+                        {/* Step 0: Account */}
+                        {currentStep === 0 && (
+                          <Step1Account
+                            data={formData}
+                            onChange={(fields) =>
+                              setFormData((prev) => ({
+                                ...prev,
+                                account: { ...prev.account, ...fields }
+                              }))
+                            }
+                            errors={errors}
+                          />
+                        )}
+
+                        {/* Step 1: Profile Type */}
+                        {currentStep === 1 && (
+                          <Step2ProfileType
+                            candidateType={formData.candidateType}
+                            onSelect={(type) => {
+                              setFormData((prev) => ({ ...prev, candidateType: type }));
+                              setTimeout(() => handleNext(), 150);
+                            }}
+                          />
+                        )}
+
+                        {/* Step 2: Personal Details */}
+                        {currentStep === 2 && (
+                          <Step3PersonalDetails
+                            data={formData}
+                            onChange={(fields) =>
+                              setFormData((prev) => ({
+                                ...prev,
+                                personal: { ...prev.personal, ...fields }
+                              }))
+                            }
+                            errors={errors}
+                          />
+                        )}
+
+                        {/* Step 3: Education */}
+                        {currentStep === 3 && (
+                          <Step4Education
+                            educationList={formData.education}
+                            onChange={(list) => setFormData((prev) => ({ ...prev, education: list }))}
+                            candidateType={formData.candidateType}
+                          />
+                        )}
+
+                        {/* Step 4: Experience */}
+                        {currentStep === 4 && (
+                          <Step5Experience
+                            experienceList={formData.experience}
+                            onChange={(list) => setFormData((prev) => ({ ...prev, experience: list }))}
+                            candidateType={formData.candidateType}
+                          />
+                        )}
+
+                        {/* Step 5: Skills */}
+                        {currentStep === 5 && (
+                          <Step6Skills
+                            skillsList={formData.skills}
+                            onChange={(list) => setFormData((prev) => ({ ...prev, skills: list }))}
+                            error={errors.skills}
+                          />
+                        )}
+
+                        {/* Step 6: Projects */}
+                        {currentStep === 6 && (
+                          <Step7Projects
+                            projectsList={formData.projects}
+                            onChange={(list) => setFormData((prev) => ({ ...prev, projects: list }))}
+                          />
+                        )}
+
+                        {/* Step 7: Certifications & Achievements */}
+                        {currentStep === 7 && (
+                          <Step8CertificationsAchievements
+                            certificationsList={formData.certifications}
+                            achievementsList={formData.achievements}
+                            onCertificationsChange={(list) =>
+                              setFormData((prev) => ({ ...prev, certifications: list }))
+                            }
+                            onAchievementsChange={(list) =>
+                              setFormData((prev) => ({ ...prev, achievements: list }))
+                            }
+                          />
+                        )}
+
+                        {/* Step 8: Professional Links */}
+                        {currentStep === 8 && (
+                          <Step9Links
+                            links={formData.links}
+                            onChange={(fields) =>
+                              setFormData((prev) => ({
+                                ...prev,
+                                links: { ...prev.links, ...fields }
+                              }))
+                            }
+                          />
+                        )}
+
+                        {/* Step 9: Preferences */}
+                        {currentStep === 9 && (
+                          <Step10Preferences
+                            preferences={formData.careerPreferences}
+                            onChange={(fields) =>
+                              setFormData((prev) => ({
+                                ...prev,
+                                careerPreferences: { ...prev.careerPreferences, ...fields }
+                              }))
+                            }
+                            candidateType={formData.candidateType}
+                            errors={errors}
+                          />
+                        )}
+
+                        {/* Step 10: Portfolio Setup */}
+                        {currentStep === 10 && (
+                          <Step11PortfolioSetup
+                            portfolio={formData.portfolio}
+                            fullName={formData.personal.fullName}
+                            onChange={(fields) =>
+                              setFormData((prev) => ({
+                                ...prev,
+                                portfolio: { ...prev.portfolio, ...fields }
+                              }))
+                            }
+                          />
+                        )}
+                      </div>
+
+                      {/* Bottom Button Row: Cancel / Back on Left, Next on Right */}
+                      <div className="pt-4 flex items-center justify-between border-t border-slate-100">
+                        {currentStep === 0 ? (
+                          <button
+                            type="button"
+                            onClick={handleCancel}
+                            className="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 font-semibold text-xs sm:text-[13px] transition-colors cursor-pointer"
+                          >
+                            Cancel
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={handleBack}
+                            className="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 font-semibold text-xs sm:text-[13px] flex items-center gap-1.5 transition-colors cursor-pointer"
+                          >
+                            <ArrowLeft className="w-3.5 h-3.5" />
+                            <span>Back</span>
+                          </button>
+                        )}
+
+                        <button
+                          type="button"
+                          onClick={handleNext}
+                          className="px-6 sm:px-7 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-[13px] flex items-center gap-2 shadow-sm shadow-blue-500/20 transition-all cursor-pointer active:scale-95"
+                        >
+                          <span>{currentStep === 10 ? 'Review Profile' : 'Next'}</span>
+                          <ArrowRight className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+
+                    </div>
+
+                    {/* Inner Right: "Why create an account?" Card (approx 38% width) */}
+                    <div className="lg:col-span-5 xl:col-span-5">
+                      <SideValuePropCard />
+                    </div>
+
+                  </div>
+                )}
+              </div>
+
+            </div>
+          </div>
+
         </div>
-
-        {/* Login redirect link */}
-        <div className="mt-6 text-center text-xs text-slate-500">
-          Already have an account?{' '}
-          <Link to="/login" className="font-extrabold text-blue-600 hover:text-blue-700 hover:underline">
-            Login
-          </Link>
-        </div>
-
       </div>
     </div>
   );

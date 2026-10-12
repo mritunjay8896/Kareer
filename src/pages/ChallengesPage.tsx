@@ -589,14 +589,15 @@ export const ChallengesPage: React.FC<ChallengesPageProps> = ({
                       </button>
                     </div>
                   ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+                    <div className="columns-1 sm:columns-2 xl:columns-3 gap-4 space-y-4">
                       {filteredChallenges.map((challenge) => (
-                        <ChallengeCard
-                          key={challenge.id}
-                          challenge={challenge}
-                          isBookmarked={bookmarkedIds.includes(challenge.id)}
-                          onBookmark={onBookmark}
-                        />
+                        <div key={challenge.id} className="break-inside-avoid">
+                          <ChallengeCard
+                            challenge={challenge}
+                            isBookmarked={bookmarkedIds.includes(challenge.id)}
+                            onBookmark={onBookmark}
+                          />
+                        </div>
                       ))}
                     </div>
                   )}

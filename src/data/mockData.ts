@@ -539,33 +539,33 @@ export const CAREER_SWITCH_PATHS: CareerSwitchPath[] = [
 export const FAQ_LIST: FAQItem[] = [
   {
     id: 'faq-1',
-    category: 'Students',
-    question: 'Is CareerPulse completely free for students and job seekers?',
-    answer: 'Yes! CareerPulse is 100% free for students, freshers, and job seekers. You can search, apply to thousands of verified jobs/internships, build ATS-friendly resumes, and access free mock tests without any hidden charges.'
+    category: 'Portfolio',
+    question: 'How do I create and share my personal portfolio website?',
+    answer: 'Simply visit the Portfolio Website builder, customize your bio, tech stack, and featured projects, and publish your personal live handle (e.g. glitread.app/p/yourname). You can share this URL directly with recruiters, on LinkedIn, or in your resume header.'
   },
   {
     id: 'faq-2',
-    category: 'Students',
-    question: 'How does the AI Resume Checker and ATS Score work?',
-    answer: 'Our AI Resume Checker scans your uploaded resume against industry-standard ATS (Applicant Tracking Systems) used by top companies like Google, TCS, and Amazon. It gives you a score out of 100 with actionable feedback on keywords, formatting, and impact metrics.'
+    category: 'Resume',
+    question: 'What makes the Glitread ATS Resume Builder special?',
+    answer: 'Our resume builder formats your profile with ATS-compliant typography, clear single-column hierarchies, and live keyword analysis. It provides an instant ATS compatibility score and 1-click PDF download formatted to pass screening algorithms at top tech companies.'
   },
   {
     id: 'faq-3',
-    category: 'Students',
-    question: 'Are government jobs and results updated daily?',
-    answer: 'Yes, our dedicated research team tracks official government portals (UPSC, SSC, Railway Recruitment Boards, IBPS, State PSCs) and updates vacancies, admit cards, and results within minutes of publication.'
+    category: 'Employers',
+    question: 'How can employers search candidate profiles without a dashboard?',
+    answer: 'Employers can directly visit the Candidate Search page to search candidate profiles by skills, experience, and notice period. Recruiters can view live portfolios, inspect ATS resumes, and send direct messages without dealing with a bloated hiring dashboard.'
   },
   {
     id: 'faq-4',
-    category: 'Employers',
-    question: 'How can employers post jobs and hire freshers on CareerPulse?',
-    answer: 'Employers can click on "For Employers" -> "Post Job" to create an account. We offer AI candidate matching, automated skill verification tests, and bulk invitation tools to hire freshers 5x faster.'
+    category: 'Extension',
+    question: 'How does the Chrome Autofill Extension work on job boards?',
+    answer: 'Install our lightweight Manifest V3 Chrome extension and click "Autofill" whenever you open a job application form on Greenhouse, Workday, Lever, or Ashby. It automatically populates your contact details, portfolio links, and standard questions in under 1 second.'
   },
   {
     id: 'faq-5',
-    category: 'General',
-    question: 'What makes CareerPulse different from other job portals?',
-    answer: 'CareerPulse combines job search, internships, government exams, AI resume checking, live portfolio generators, and career switch roadmaps into a single premium SaaS interface designed for Indian students and professionals.'
+    category: 'Privacy',
+    question: 'Is my autofill data and profile information secure?',
+    answer: 'Yes! The Glitread Chrome Extension operates entirely client-side. Your autofill profile and application answers are stored locally on your own browser device, guaranteeing zero tracking and complete data confidentiality.'
   }
 ];
 

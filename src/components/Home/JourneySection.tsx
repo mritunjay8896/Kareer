@@ -10,45 +10,45 @@ import {
 export const stepsData = [
   {
     step: '01',
-    title: 'Join as a Student',
-    desc: 'Create your account in minutes.',
+    title: 'Create Portfolio',
+    desc: 'Launch custom /p/:handle website.',
     icon: User,
     color: 'bg-blue-50 text-blue-600 border-blue-200'
   },
   {
     step: '02',
-    title: 'Build Your Profile',
-    desc: 'Add your education, skills, projects and more.',
+    title: 'Build ATS Resume',
+    desc: 'Real-time scoring & PDF export.',
     icon: FileText,
-    color: 'bg-emerald-50 text-emerald-600 border-emerald-200'
+    color: 'bg-rose-50 text-rose-500 border-rose-200'
   },
   {
     step: '03',
-    title: 'Gain Experience',
-    desc: 'Hands-on projects, certifications and training.',
+    title: 'Add Chrome Ext',
+    desc: 'Install 1-click form autofill tool.',
     icon: Lightbulb,
     color: 'bg-amber-50 text-amber-500 border-amber-200'
   },
   {
     step: '04',
-    title: 'Show Your Work',
-    desc: 'Build portfolio & resume.',
-    icon: FileText,
-    color: 'bg-rose-50 text-rose-500 border-rose-200'
+    title: 'Autofill In 1 Sec',
+    desc: 'Instant fill across Greenhouse & Workday.',
+    icon: Rocket,
+    color: 'bg-indigo-50 text-indigo-600 border-indigo-200'
   },
   {
     step: '05',
-    title: 'Discover Opportunities',
-    desc: 'Find fresher roles, career paths & more.',
+    title: 'Employer Discovery',
+    desc: 'Hiring teams search candidate profiles.',
     icon: Search,
     color: 'bg-purple-50 text-purple-600 border-purple-200'
   },
   {
     step: '06',
-    title: 'Get Hired',
-    desc: 'Apply, interview and start your career.',
+    title: 'Direct Hire',
+    desc: 'Receive direct interviews & offers.',
     icon: Rocket,
-    color: 'bg-violet-50 text-violet-600 border-violet-200'
+    color: 'bg-emerald-50 text-emerald-600 border-emerald-200'
   },
 ];
 

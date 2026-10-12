@@ -1,98 +1,87 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import boyBannerImg from '../../image1/boybanner.png';
-import { 
-  ArrowRight, 
-  GraduationCap, 
-  User, 
-  Briefcase, 
-  Star,
-  Sparkles
-} from 'lucide-react';
+import jobForAllImg from '../../image1/jobforall.png';
+import { ArrowRight, Users, Sparkles, CheckCircle2 } from 'lucide-react';
 
 interface FigmaHeroProps {
-  onOpenAuth: (mode: 'login' | 'register') => void;
+  onOpenAuth?: (mode: 'login' | 'register') => void;
 }
 
-export const FigmaHero: React.FC<FigmaHeroProps> = () => {
+export const FigmaHero: React.FC<FigmaHeroProps> = ({ onOpenAuth }) => {
   return (
-    <section className="relative w-full bg-gradient-to-r from-white via-[#F8FAFE] to-[#F0F5FD] pt-8 sm:pt-12 lg:pt-14 pb-10 sm:pb-14 lg:pb-16 px-4 sm:px-6 lg:px-8 xl:px-12 overflow-hidden">
-      <div className="w-full max-w-[1360px] mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 items-center min-h-[460px] lg:min-h-[520px]">
+    <section className="relative w-full bg-white pt-8 sm:pt-12 lg:pt-14 pb-12 sm:pb-16 lg:pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden border-b border-slate-100">
+      <div className="w-full max-w-[1340px] mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 xl:gap-12 items-center">
           
-          {/* Left Content Column */}
-          <div className="lg:col-span-5 space-y-4 sm:space-y-5 flex flex-col justify-center z-10 py-2 sm:py-4">
+          {/* Left Content Column (7 cols) */}
+          <div className="lg:col-span-7 space-y-6 flex flex-col justify-center z-10">
             
-            {/* Top Pill Card: Your Career. Your Story */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#F3EEFF] text-[#8B5CF6] text-xs font-semibold shadow-2xs w-fit">
-              <Sparkles className="w-3.5 h-3.5 text-[#8B5CF6] fill-[#8B5CF6]/20" />
-              <span>Your Career. Your Story</span>
+            {/* Small brand line */}
+            <div className="inline-flex items-center gap-2">
+              <span className="text-xs sm:text-sm font-semibold tracking-wide text-blue-600 uppercase">
+                Zero Unemployed India
+              </span>
             </div>
 
             {/* Main Headline */}
-            <div className="space-y-2 sm:space-y-3">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[46px] xl:text-[50px] font-black text-slate-900 tracking-tight leading-[1.12] font-display">
-                Build Your Professional <br />
-                <span className="bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-600 bg-clip-text text-transparent">Identity.</span>
+            <div className="space-y-4">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.08] font-display text-balance">
+                Hire From Us. <br />
+                <span className="text-blue-600">Get Hired Fast.</span>
               </h1>
-              <p className="text-sm sm:text-[15px] text-slate-500 font-normal leading-relaxed max-w-lg">
-                Create your ATS-friendly resume, build a professional portfolio, and get discovered by employers — all in one place.
+              <p className="text-base sm:text-lg text-slate-600 font-normal leading-relaxed max-w-xl text-balance">
+                Connect with 2 lakh+ freshers and experienced professionals across technology, operations, and business roles.
               </p>
             </div>
 
-            {/* Action Buttons */}
-            <div className="flex flex-wrap items-center gap-3 pt-2">
+            {/* Action Buttons: Dual Track */}
+            <div className="flex flex-wrap items-center gap-3.5 pt-1">
+              {/* Primary Employer CTA: Bright Blue */}
+              <a
+                href="#talent-pool"
+                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm sm:text-base px-6 py-3.5 rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap shrink-0"
+              >
+                <span>Hire Talent</span>
+                <ArrowRight className="w-4 h-4" />
+              </a>
+
+              {/* Secondary Candidate CTA: Light / Subtle border */}
               <Link
                 to="/resume-builder"
-                className="bg-[#1565ED] hover:bg-[#0E56D6] text-white font-bold text-xs sm:text-sm px-6 py-3 rounded-xl shadow-md shadow-blue-500/25 hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer group"
+                className="bg-slate-50 hover:bg-slate-100 text-slate-800 hover:text-slate-900 font-semibold text-sm sm:text-base px-6 py-3.5 rounded-xl border border-slate-200 transition-all flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap shrink-0"
               >
-                <span>Create My Profile</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                <span>Explore Opportunities</span>
               </Link>
-
-              <a
-                href="#features"
-                className="bg-white hover:bg-slate-50 text-[#1565ED] font-bold text-xs sm:text-sm px-6 py-3 rounded-xl border border-blue-200/90 shadow-2xs hover:border-blue-300 transition-all flex items-center justify-center"
-              >
-                <span>Explore Features</span>
-              </a>
             </div>
 
-            {/* Audience Pill Tags Row */}
-            <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 pt-3">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-blue-100/90 text-slate-700 text-xs font-semibold shadow-2xs">
-                <GraduationCap className="w-3.5 h-3.5 text-[#1565ED] shrink-0" />
-                <span>Students</span>
+            {/* 3 Compact Trust Indicators */}
+            <div className="pt-4 border-t border-slate-100 flex flex-wrap items-center gap-6 sm:gap-8 text-xs sm:text-sm font-medium text-slate-600">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0" />
+                <span>2 Lakh+ Talent Pool</span>
               </div>
-
-              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-blue-100/90 text-slate-700 text-xs font-semibold shadow-2xs">
-                <User className="w-3.5 h-3.5 text-[#1565ED] shrink-0" />
-                <span>Freshers</span>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0" />
+                <span>Freshers &amp; Experienced</span>
               </div>
-
-              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-blue-100/90 text-slate-700 text-xs font-semibold shadow-2xs">
-                <Briefcase className="w-3.5 h-3.5 text-[#1565ED] shrink-0" />
-                <span>Working Professionals</span>
-              </div>
-
-              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-blue-100/90 text-slate-700 text-xs font-semibold shadow-2xs">
-                <Star className="w-3.5 h-3.5 text-[#1565ED] shrink-0" />
-                <span>Experienced Professionals</span>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0" />
+                <span>Multiple Skills &amp; Domains</span>
               </div>
             </div>
 
           </div>
 
-          {/* Right Graphic Column: 3D Scene with ATS Resume Card, Portfolio Window, Discovered by Top Companies Card, Boy & Desk */}
-          <div className="lg:col-span-7 relative flex items-center justify-center lg:justify-end">
-            <div className="relative w-full max-w-[800px] xl:max-w-[860px] flex items-center justify-center">
-              {/* Soft ambient radial glow */}
-              <div className="absolute inset-0 m-auto w-[110%] h-[110%] -left-[5%] -top-[5%] rounded-full bg-gradient-to-tr from-blue-200/40 via-indigo-100/30 to-transparent blur-3xl pointer-events-none -z-0" />
+          {/* Right Graphic Column (5 cols) - PRESERVED EXISTING ILLUSTRATION WITH SUBTLE PALE-BLUE GLOW */}
+          <div className="lg:col-span-5 relative flex items-center justify-center lg:justify-end w-full">
+            <div className="relative w-full max-w-[480px] lg:max-w-[520px] flex items-center justify-center lg:justify-end">
+              {/* Subtle pale-blue glow behind illustration */}
+              <div className="absolute inset-0 m-auto w-[110%] h-[110%] -left-[5%] -top-[5%] rounded-full bg-blue-100/60 blur-3xl pointer-events-none -z-0" />
 
               <img
-                src={boyBannerImg}
-                alt="Build Your Professional Identity"
-                className="relative z-10 w-full h-auto object-contain max-h-[480px] sm:max-h-[560px] lg:max-h-[620px] select-none drop-shadow-[0_20px_40px_rgba(30,58,138,0.12)] transition-transform duration-500 hover:scale-[1.01]"
+                src={jobForAllImg}
+                alt="Young professionals and graduates ready to build careers"
+                className="relative z-10 w-full h-auto object-contain max-h-[400px] sm:max-h-[440px] lg:max-h-[480px] select-none transition-transform duration-300 block"
                 loading="eager"
               />
             </div>

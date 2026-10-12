@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useParams, useLocation, Link } from 'react-router-dom';
 import { 
   Globe, 
   Share2, 
@@ -45,9 +46,12 @@ import {
   TrendingUp,
   Sparkle,
   Moon,
-  Trophy
+  Trophy,
+  Folder
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { MOCK_CANDIDATES } from '../../data/mockCandidates';
+import { PORTFOLIO_TEMPLATES } from './PortfolioTemplatesMarketplacePage';
 
 // Interfaces for Portfolio Data
 export interface PortfolioProject {
@@ -129,15 +133,18 @@ export interface PortfolioThemeConfig {
 
 export const ShareablePortfolioBuilderPage: React.FC = () => {
   const { candidateProfile } = useAuth();
+  const routeParams = useParams<{ handle?: string }>();
+  const location = useLocation();
 
   // Mode: 'editor' (Dashboard + Preview) or 'public' (Pure Standalone Portfolio View)
-  const [viewMode, setViewMode] = useState<'editor' | 'public'>('editor');
+  const isPublicRoute = Boolean(routeParams.handle) || location.pathname.startsWith('/p/');
+  const [viewMode, setViewMode] = useState<'editor' | 'public'>(isPublicRoute ? 'public' : 'editor');
   
   // Mobile Nav Drawer for Public Portfolio
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Custom Portfolio Slug / Handle
-  const [handle, setHandle] = useState('aman-kumar');
+  const [handle, setHandle] = useState(routeParams.handle || 'aman-kumar');
   const [copied, setCopied] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [showQrModal, setShowQrModal] = useState(false);
@@ -425,8 +432,87 @@ export const ShareablePortfolioBuilderPage: React.FC = () => {
     }
   ]);
 
+  // Synchronize route handle with candidate data & URL template selection
+  useEffect(() => {
+    // Check if a template was chosen from the marketplace
+    const searchParams = new URLSearchParams(location.search);
+    const templateQuery = searchParams.get('template');
+    if (templateQuery) {
+      const tpl = PORTFOLIO_TEMPLATES.find(t => t.id === templateQuery);
+      if (tpl) {
+        if (tpl.layoutStyle === 'dark') {
+          setActiveThemeId('minimal-slate');
+        } else if (tpl.colorTheme === 'green') {
+          setActiveThemeId('emerald');
+        } else if (tpl.colorTheme === 'purple' || tpl.colorTheme === 'pink') {
+          setActiveThemeId('violet');
+        } else if (tpl.colorTheme === 'blue') {
+          setActiveThemeId('sky-blue');
+        }
+        setProfile(prev => ({
+          ...prev,
+          fullName: prev.fullName === 'Aman Sharma' ? tpl.personName : prev.fullName,
+          title: tpl.role,
+          subtitle: tpl.tagline,
+          avatarUrl: tpl.avatar || prev.avatarUrl,
+        }));
+      }
+    }
+
+    if (routeParams.handle) {
+      setHandle(routeParams.handle);
+      setViewMode('public');
+      const found = MOCK_CANDIDATES.find(c => c.handle.toLowerCase() === routeParams.handle?.toLowerCase());
+      if (found) {
+        setProfile(prev => ({
+          ...prev,
+          fullName: found.name,
+          title: found.role,
+          subtitle: found.headline,
+          location: found.location,
+          email: found.email,
+          phone: found.phone,
+          avatarUrl: found.avatar,
+          aboutBio: found.bio,
+          experienceYears: `${found.experienceYears}+`,
+        }));
+        setSocials({
+          github: found.github,
+          linkedin: found.linkedin,
+          twitter: `https://twitter.com/${found.handle}`,
+          instagram: `https://instagram.com/${found.handle}`,
+          email: `mailto:${found.email}`,
+        });
+        if (found.skills?.length) {
+          setSkills(found.skills.map((s, idx) => ({
+            name: s,
+            iconName: 'code',
+            level: 'Advanced',
+            percentage: 85 + (idx % 3) * 5,
+            color: '#1565ED'
+          })));
+        }
+        if (found.featuredProjects?.length) {
+          setProjects(found.featuredProjects.map((p, idx) => ({
+            id: `proj-${idx}`,
+            title: p.title,
+            description: p.description,
+            tags: p.tags,
+            githubUrl: p.githubUrl || found.github,
+            demoUrl: p.demoUrl || 'https://demo.glitread.com',
+            featured: true,
+            image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=800',
+            category: p.tags[0] || 'Web'
+          })));
+        }
+      }
+    }
+  }, [routeParams.handle]);
+
   // Public URL calculation
-  const publicUrl = `https://careerpulse.me/p/${handle || 'user'}`;
+  const publicUrl = typeof window !== 'undefined'
+    ? `${window.location.origin}/p/${handle || 'user'}`
+    : `https://glitread.com/p/${handle || 'user'}`;
 
   // Copy link handler
   const handleCopyLink = () => {
@@ -1283,6 +1369,15 @@ export const ShareablePortfolioBuilderPage: React.FC = () => {
 
           {/* Right Action Bar */}
           <div className="flex items-center gap-1.5 flex-wrap w-full md:w-auto">
+            {/* Template Marketplace Navigation Button */}
+            <Link
+              to="/portfolio"
+              className="px-2.5 py-1 rounded-lg text-xs font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 transition-colors flex items-center gap-1.5"
+              title="Browse & Select Portfolio Templates"
+            >
+              <Folder className="w-3.5 h-3.5 text-blue-600" />
+              <span>Templates</span>
+            </Link>
             
             {/* View Toggle */}
             <div className="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200">
@@ -1307,7 +1402,7 @@ export const ShareablePortfolioBuilderPage: React.FC = () => {
             {/* Custom URL Input Pill */}
             <div className="flex items-center gap-1 bg-slate-50 border border-slate-200 px-2.5 py-1 rounded-lg text-xs font-mono">
               <span className="text-slate-400 font-sans text-[10px] font-bold">URL:</span>
-              <span className="text-slate-900 font-bold text-xs">careerpulse.me/p/</span>
+              <span className="text-slate-900 font-bold text-xs">glitread.com/p/</span>
               <input
                 type="text"
                 value={handle}
@@ -1347,17 +1442,25 @@ export const ShareablePortfolioBuilderPage: React.FC = () => {
       {/* If Public View toggle is active, show the standalone view */}
       {viewMode === 'public' ? (
         <div className="w-full max-w-[1720px] mx-auto px-2 sm:px-3 lg:px-4">
-          <div className="mb-3 bg-indigo-900 text-white p-2.5 rounded-xl flex items-center justify-between text-xs font-bold">
+          <div className="mb-3 bg-slate-900 text-white p-2.5 rounded-xl flex flex-wrap items-center justify-between gap-2 text-xs font-bold shadow-sm">
             <span className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-              Viewing Public Shareable Portfolio View
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>Glitread Live Portfolio: <strong className="text-white">{profile.fullName}</strong> (<code className="text-blue-300">/p/{handle}</code>)</span>
             </span>
-            <button
-              onClick={() => setViewMode('editor')}
-              className="px-3 py-1 bg-white/10 hover:bg-white/20 text-white rounded-lg cursor-pointer text-xs"
-            >
-              Return to Dashboard Editor
-            </button>
+            <div className="flex items-center gap-2">
+              <Link
+                to="/search-profiles"
+                className="px-2.5 py-1 bg-white/10 hover:bg-white/20 text-slate-200 rounded-lg text-xs transition-colors"
+              >
+                ← Search Candidates
+              </Link>
+              <button
+                onClick={() => setViewMode('editor')}
+                className="px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white rounded-lg cursor-pointer text-xs font-bold transition-colors"
+              >
+                Edit in Portfolio Builder
+              </button>
+            </div>
           </div>
           {renderPublicPortfolio()}
         </div>

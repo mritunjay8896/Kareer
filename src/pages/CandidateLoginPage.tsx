@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Mail, Lock, ArrowRight, AlertCircle, Building2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export const CandidateLoginPage: React.FC = () => {
   const { currentUser, userRole, authInitialized, loginCandidate } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = (location.state as any)?.from?.pathname || new URLSearchParams(location.search).get('redirect') || '/jobs';
 
   useEffect(() => {
     if (authInitialized && currentUser) {
       if (userRole === 'employer') {
         navigate('/employer/dashboard', { replace: true });
       } else {
-        navigate('/candidate/dashboard', { replace: true });
+        navigate(from, { replace: true });
       }
     }
-  }, [authInitialized, currentUser, userRole, navigate]);
+  }, [authInitialized, currentUser, userRole, navigate, from]);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -33,7 +35,7 @@ export const CandidateLoginPage: React.FC = () => {
       setLoading(true);
       setError(null);
       await loginCandidate(email, password);
-      navigate('/candidate/dashboard');
+      navigate(from);
     } catch (err: any) {
       setError(err.message || 'Failed to sign in. Please check your credentials.');
     } finally {

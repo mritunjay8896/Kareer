@@ -23,7 +23,7 @@ export const FAQSection: React.FC = () => {
             Frequently Asked Questions
           </h2>
           <p className="text-slate-600 text-sm mt-2">
-            Everything you need to know about job applications, AI resume scoring, and employer hiring.
+            Everything you need to know about portfolio websites, ATS resume building, candidate search, and the 1-click autofill Chrome extension.
           </p>
         </div>
 

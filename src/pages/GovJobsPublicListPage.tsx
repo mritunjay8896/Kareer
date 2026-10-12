@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import govBannerImg from '../image1/governmentjobbannerimg.png';
 import { GovernmentJob } from '../types';
 import { fetchAllGovernmentJobs } from '../lib/govJobs';
@@ -40,6 +40,7 @@ import {
 
 export const GovJobsPublicListPage: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [jobs, setJobs] = useState<GovernmentJob[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -48,6 +49,21 @@ export const GovJobsPublicListPage: React.FC = () => {
   const [selectedState, setSelectedState] = useState<string>('All');
   const [selectedLanguage, setSelectedLanguage] = useState<string>('All');
   const [bookmarkedIds, setBookmarkedIds] = useState<string[]>([]);
+
+  useEffect(() => {
+    const cat = searchParams.get('category');
+    if (cat) {
+      setActiveCategoryFilter(cat);
+    }
+    const q = searchParams.get('search');
+    if (q) {
+      setSearchTerm(q);
+    }
+    const st = searchParams.get('state');
+    if (st) {
+      setSelectedState(st);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     fetchAllGovernmentJobs(false).then((data) => {
@@ -482,14 +498,14 @@ export const GovJobsPublicListPage: React.FC = () => {
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div className="columns-1 md:columns-2 lg:columns-3 gap-5 space-y-5">
               {filteredJobs.map((job, idx) => {
                 const isBookmarked = bookmarkedIds.includes(job.id);
                 const isHot = idx % 3 === 2;
                 return (
                   <div
                     key={job.id}
-                    className="bg-white rounded-2xl border border-slate-200/90 shadow-xs hover:border-blue-300 hover:shadow-md transition-all flex flex-col justify-between p-5 relative group"
+                    className="break-inside-avoid bg-white rounded-2xl border border-slate-200/90 shadow-xs hover:border-blue-300 hover:shadow-md transition-all flex flex-col justify-between p-5 relative group"
                   >
                     <div>
                       {/* Top Badge & Organization Logo Row */}
@@ -607,11 +623,11 @@ export const GovJobsPublicListPage: React.FC = () => {
 
         {/* 4. Sarkari Result Grid (6 Notice Boards) */}
         <div className="pt-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="columns-1 md:columns-2 lg:columns-3 gap-5 space-y-5">
             {noticeBoards.map((board, idx) => {
               const IconComp = board.icon;
               return (
-                <div key={idx} className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-5">
+                <div key={idx} className="break-inside-avoid bg-white rounded-2xl border border-slate-200/90 shadow-xs p-5">
                   <div className="flex items-center justify-between mb-3.5 pb-2.5 border-b border-slate-100">
                     <div className="flex items-center gap-2">
                       <IconComp className={`w-4 h-4 ${board.color}`} />

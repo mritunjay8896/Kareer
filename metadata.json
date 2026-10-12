@@ -1,6 +1,6 @@
 {
   "name": "glitread.com - Modern Career Platform",
-  "description": "Glitread - Premium career platform for Jobs, Internships, Government Jobs, Challenges & Hackathons, AI Resume Builder, and Portfolios.",
+  "description": "Glitread - Portfolio Websites, ATS Resume Builder, Employer Candidate Search, and 1-Click Form Autofill Chrome Extension.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
